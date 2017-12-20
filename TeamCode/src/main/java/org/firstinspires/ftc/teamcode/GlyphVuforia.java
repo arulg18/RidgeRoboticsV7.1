@@ -25,6 +25,8 @@ import org.firstinspires.ftc.teamcode.Central;
 
 public class GlyphVuforia extends Central {
 
+    OpenGLMatrix lastLocation = null;
+
     public void runOpMode() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

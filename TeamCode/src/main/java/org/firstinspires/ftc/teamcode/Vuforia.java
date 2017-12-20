@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.Central;
  */
 
 @Autonomous(name="Vuforia Test", group ="Test")
-@Disabled
+
 public class Vuforia extends Central {
 
     public static final String TAG = "Vuforia VuMark Sample";
