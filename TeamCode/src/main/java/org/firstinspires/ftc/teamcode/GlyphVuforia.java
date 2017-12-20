@@ -29,8 +29,7 @@ public class GlyphVuforia extends Central {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        params.vuforiaLicenseKey = "AeHK+j//////AAAAGV9JzI/9h0DLhZ7c7w4sN30lJRIpNPRyXVHdsqCX+XHpMysSwND71QWYT9YFkwVxopMQaXnzmfWK7Sc2cSJJLPU9r2G/ioxim4UU4c4rPyvhtkOcZkaS6hAPo+aKdQVUsVkBsBbPIRcQOAEmp7oKqV0d/8pydpXHCAUA18eNjdoEufCSugolPo84nHnEcEiklpqljewrCObyMTTwoftkpCEabzJoHZ5s15Ztja9s9afEXBA5Vhp2OEcdxWQVoTHL5eFJog3faeMBSyiU/NKjRNHv04w+P8lMnClXGlyphTracking_OT.dat\nGlyphTracking_OT.xmlXLI8BiFVof8X5MDQPv8vFRHEADe8lCpnYDh1EGM0ZkFJv+gc59k4Ky1bIdUZYNvEto3Y5WRK";
-
+        params.vuforiaLicenseKey = "AeHK+j//////AAAAGV9JzI/9h0DLhZ7c7w4sN30lJRIpNPRyXVHdsqCX+XHpMysSwND71QWYT9YFkwVxopMQaXnzmfWK7Sc2cSJJLPU9r2G/ioxim4UU4c4rPyvhtkOcZkaS6hAPo+aKdQVUsVkBsBbPIRcQOAEmp7oKqV0d/8pydpXHCAUA18eNjdoEufCSugolPo84nHnEcEiklpqljewrCObyMTTwoftkpCEabzJoHZ5s15Ztja9s9afEXBA5Vhp2OEcdxWQVoTHL5eFJog3faeMBSyiU/NKjRNHv04w+P8lMnClXXLI8BiFVof8X5MDQPv8vFRHEADe8lCpnYDh1EGM0ZkFJv+gc59k4Ky1bIdUZYNvEto3Y5WRK\n";
         params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
