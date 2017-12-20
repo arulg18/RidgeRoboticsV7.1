@@ -17,7 +17,7 @@ public class Test_Mecanum extends Central {
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
 
-        CentralClass(setupType.all);
+        CentralClass(setupType.drive);
 
         waitForStart();
         runtime.reset();

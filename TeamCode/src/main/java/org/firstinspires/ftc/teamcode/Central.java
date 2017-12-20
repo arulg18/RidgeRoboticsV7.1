@@ -228,35 +228,28 @@ public class Central extends LinearOpMode{
     public void CentralClass(setupType setup) throws InterruptedException{
         switch (setup){
             case all:
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotorSimple.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotorSimple.Direction.FORWARD);
-
-                motorDriveMode(EncoderMode.ON, motorFR, motorFL, motorBR, motorBL);
-
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, START_POSITION_DOWN);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, START_POSITION_FLICK);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, JEWEL_SENSOR_LED_ON);
-
-
-
+                setupDrivetrain();
+                setupJewel();
+                setupGlyph();
+                setupRelic();
                 break;
             case teleop:
-
+                setupDrivetrain();
+                setupJewel();
+                setupGlyph();
+                setupRelic();
                 break;
             case drive:
-
+                setupDrivetrain();
                 break;
             case jewel:
-
+                setupJewel();
                 break;
             case relic:
-
+                setupRelic();
                 break;
             case glyph:
-
+                setupGlyph();
                 break;
         }
     }
@@ -451,7 +444,7 @@ public class Central extends LinearOpMode{
         sleep(1000);
         centerFlicker(0);
     } // TO BE FIXED
-    public void flick(flick side){
+    public void flick(flick side) throws InterruptedException{
         switch (side){
             case left:
                 jewelFlick.setPosition(LEFT_POSITION_FLICK);
@@ -533,6 +526,23 @@ public class Central extends LinearOpMode{
         return sensor;
     }
 
+    public void setupDrivetrain() throws InterruptedException{
+        motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
+        motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
+        motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotorSimple.Direction.FORWARD);
+        motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotorSimple.Direction.FORWARD);
+
+        motorDriveMode(EncoderMode.ON, motorFR, motorFL, motorBR, motorBL);
+    }
+    public void setupRelic() throws InterruptedException{}// FINISH
+    public void setupJewel() throws InterruptedException{
+        jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, START_POSITION_DOWN);
+        jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, START_POSITION_FLICK);
+
+        jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, JEWEL_SENSOR_LED_ON);
+
+    }
+    public void setupGlyph() throws InterruptedException{}
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
     public void driveTrainMovement(double speed, Central.movements movement) throws InterruptedException{

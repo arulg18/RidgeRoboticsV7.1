@@ -62,12 +62,9 @@ import org.firstinspires.ftc.teamcode.Central;
  */
 
 @Autonomous(name="Vuforia Test", group ="Test")
-
 public class Vuforia extends Central {
 
     public static final String TAG = "Vuforia VuMark Sample";
-
-    OpenGLMatrix lastLocation = null;
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
