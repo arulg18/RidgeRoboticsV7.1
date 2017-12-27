@@ -63,21 +63,22 @@ public class Central extends LinearOpMode{
                 public static final double MAX_POSITION_FLICK = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_DOWN = 0;
-                public static final double START_POSITION_FLICK = 0;
+                public static final double START_POSITION_DOWN = 0.63;
+                public static final double START_POSITION_FLICK = 0.35;
 
                 //  Significant Positions
 
-                    //  Flick Positions
-                    public static final double LOW_POSITION_DOWN = 0;
-                    public static final double RIGHT_POSITION_FLICK = 0;
-                    public static final double LEFT_POSITION_FLICK = 0;
-
                     //  Centered Positions
-                    public static final double CENTER_POSITION_DOWN = 0.5;
-                    public static final double CENTER_POSITION_FLICK = 0.5;
+                    public static final double CENTER_POSITION_DOWN = 0.63;
+                    public static final double CENTER_POSITION_FLICK = 0.46;
 
-                //  Increments
+                    //  Flick Positions
+                    public static final double LOW_POSITION_DOWN = 0.05;
+                    public static final double RIGHT_POSITION_FLICK = CENTER_POSITION_FLICK - 0.36;
+                    public static final double LEFT_POSITION_FLICK = CENTER_POSITION_FLICK + 0.36;
+
+
+                 //  Increments
                     public static final double INCREMENT_POSITION_DOWN = 0.01;
                     public static final long INCREMENT_FREQUENCY_DOWN = 50;
 
@@ -385,7 +386,7 @@ public class Central extends LinearOpMode{
     public void centerFlicker(long waitAfter){
         jewelDown.setPosition(CENTER_POSITION_DOWN);
         jewelFlick.setPosition(CENTER_POSITION_FLICK);
-        sleep(200 + waitAfter);
+        sleep(800 + waitAfter);
     }
     public void initialPositionFlicker(long waitAfter){
         jewelDown.setPosition(START_POSITION_DOWN);
@@ -553,6 +554,17 @@ public class Central extends LinearOpMode{
 
         }
     }
+    public void driveTrainMovementAccelerate(double speed, Central.movements movement) throws InterruptedException{
+        double[] signs = movement.getDirections();
+        for (double i = 0; i <= speed; i+=.05) {
+            for (DcMotor motor : drivetrain) {
+                int x = Arrays.asList(drivetrain).indexOf(motor);
+                motor.setPower(signs[x] * i);
+
+            }
+        }
+    }
+
     public void stopDrivetrain() throws InterruptedException{
         for (DcMotor motor: drivetrain){
             motor.setPower(0);

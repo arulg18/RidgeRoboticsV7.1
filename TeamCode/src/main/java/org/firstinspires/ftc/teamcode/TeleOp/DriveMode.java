@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Central;
 
 
 /**
@@ -18,7 +20,7 @@ public class DriveMode extends Central {
         waitForStart();
 
         while (opModeIsActive()) {
-            //ADD CRAWL
+            //ADD CRAW
 
             float yAxis1 = -gamepad1.left_stick_y; // Main Directions y-axis
             float xAxis1 = gamepad1.left_stick_x;  // Main Directions x-axis
@@ -76,30 +78,30 @@ public class DriveMode extends Central {
                     //BACKWARD
                 }
                 else if (Math.abs(yAxis1) < xAxis1){
-                    driveTrainMovement(fb, movements.right);
+                    driveTrainMovement(rl, movements.right);
                     //RIGHT
                 }
                 else if (-Math.abs(yAxis1) > xAxis1){
-                    driveTrainMovement(fb, movements.left);
+                    driveTrainMovement(rl, movements.left);
                     //LEFT
                 }
             }
             else if (Math.pow(xAxis2, 2) + Math.pow(yAxis2, 2) >= Math.pow(DEAD_ZONE_SIZE, 2) && !rightStickButtonPressed) {    //DIAGONAL
 
                 if (yAxis2 >= 0 && xAxis2 >= 0){
-                    driveTrainMovement(fb, movements.forward);
+                    driveTrainMovement(diagonalSpeed, movements.tr);
                     //TOP RIGHT
                 }
                 else if (yAxis2 >= 0 && xAxis2 < 0){
-                    driveTrainMovement(fb, movements.backward);
+                    driveTrainMovement(diagonalSpeed, movements.tl);
                     //TOP LEFT
                 }
                 else if (yAxis2 < 0 && xAxis2 >= 0){
-                    driveTrainMovement(fb, movements.right);
+                    driveTrainMovement(diagonalSpeed, movements.br);
                     //BOTTOM RIGHT
                 }
                 else if (yAxis2 < 0 && xAxis2 < 0){
-                    driveTrainMovement(fb, movements.left);
+                    driveTrainMovement(diagonalSpeed, movements.bl);
                     //BOTTOM LEFT
                 }
             }
