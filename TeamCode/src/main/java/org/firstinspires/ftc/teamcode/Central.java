@@ -445,6 +445,7 @@ public class Central extends LinearOpMode{
                         loopquit = false;
                     }
                 }
+                break;
         }
         sleep(1000);
         centerFlicker(0);
