@@ -42,6 +42,7 @@ public class Central extends LinearOpMode{
                         (WHEEL_DIAMETER_INCHES * 3.1415);               // Conversion: Encoder Counts Motor Tetrix to Inches
 
                 public static final int BLUE_COLOR_VALUE = 1;
+                public static final int RED_COLOR_VALUE= 1;
 
                 public static final boolean JEWEL_SENSOR_LED_ON = true;
 
@@ -417,30 +418,33 @@ public class Central extends LinearOpMode{
 
         telemetry.addData("Blue Value: ", jewelSensor.blue());
         telemetry.update();
-
+        boolean loopquit= true;
         switch (side){
             case red1:
             case red2:
+                while(loopquit) {
+                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
+                        flick(flick.left);
+                        loopquit=false;
 
-                if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
-                    flick(flick.left);
-
+                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
+                        flick(flick.right);
+                        loopquit=false;
+                    }
                 }
-                else {                               //FLICK OPPOSITE
-                    flick(flick.right);
-                }
-
                 break;
             case blue1:
             case blue2:
-                if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK OPPOSITE
-                    flick(flick.right);
+                while(loopquit) {
+                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
+                        flick(flick.right);
+                        loopquit = false;
 
+                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
+                        flick(flick.left);
+                        loopquit = false;
+                    }
                 }
-                else {                              //FLICK REGULAR
-                    flick(flick.left);
-                }
-                break;
         }
         sleep(1000);
         centerFlicker(0);
