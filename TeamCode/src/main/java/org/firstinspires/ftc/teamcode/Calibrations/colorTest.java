@@ -27,7 +27,7 @@ public class colorTest extends Central {
             telemetry.addData("Blue: ", jewelSensor.blue());
             telemetry.addData("Green: ", jewelSensor.green());
             telemetry.update();
-            //
+
 
         }
     }
