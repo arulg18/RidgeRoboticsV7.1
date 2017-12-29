@@ -29,6 +29,7 @@
 package org.firstinspires.ftc.teamcode.VuforiaCodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -63,16 +64,16 @@ import org.firstinspires.ftc.teamcode.Central;
 public class Vuforia extends Central {
 
     public static final String TAG = "Vuforia VuMark Sample";
-
+    public ElapsedTime runtime = new ElapsedTime();
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
     VuforiaLocalizer vuforia;
 
-    @Override
-    public void runOpMode() {
-
+    public void runOpMode() throws InterruptedException{
+        super.setRuntime(runtime);
+        CentralClass(setupType.all);
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -145,12 +146,12 @@ public class Vuforia extends Central {
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
 
-                if (RelicRecoveryVuMark.LEFT == vuMark) {    //Block should be placed in the right column
-
+                if (RelicRecoveryVuMark.LEFT == vuMark) {    //Block should be placed in the left column
+                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.left);
                 } else if (RelicRecoveryVuMark.CENTER == vuMark) {  //Block should be placed in the center column
-
-                } else if (RelicRecoveryVuMark.RIGHT == vuMark) { //Block should be placed in the left columm
-
+                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.forward);
+                } else if (RelicRecoveryVuMark.RIGHT == vuMark) { //Block should be placed in the right columm
+                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.right);
                 } else {
                     telemetry.addData("VuMark", "not visible");
                 }

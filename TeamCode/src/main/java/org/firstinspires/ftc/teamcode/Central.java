@@ -466,6 +466,7 @@ public class Central extends LinearOpMode{
         }
     }
 
+
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
         runtime = time;
@@ -532,6 +533,15 @@ public class Central extends LinearOpMode{
         return sensor;
     }
 
+    public void powerMotors(double speed, long time, DcMotor... motors){
+        for (DcMotor motor: motors){
+            motor.setPower(speed);
+        }
+        sleep(time);
+        for (DcMotor motor: motors){
+            motor.setPower(0);
+        }
+    }
     public void setupDrivetrain() throws InterruptedException{
         motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
         motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
