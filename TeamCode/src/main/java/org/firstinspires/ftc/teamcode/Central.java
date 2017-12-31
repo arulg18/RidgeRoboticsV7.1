@@ -9,9 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 
 import java.util.Arrays;
@@ -35,7 +32,7 @@ public class Central extends LinearOpMode{
 
     //--------------------------CONSTANTS----------------------------
             //-----------------Phone (dunno where to put this)-------
-                public static final phoneOrient PHONEORIENTATION = phoneOrient.faceup; //Change as is necessary
+                public static final phoneOrient PHONEORIENTATION = phoneOrient.faceup;
             //--------------------------ENCODERS---------------------
                 public static final double COUNTS_PER_MOTOR_NEVEREST = 1680;
                 public static final double COUNTS_PER_MOTOR_TETRIX = 1440;
@@ -118,6 +115,7 @@ public class Central extends LinearOpMode{
 
 
 
+
     //--------------------------ENUMERATIONS---------------------
             public enum movements{
                 forward(1, -1, 1, -1),
@@ -178,13 +176,6 @@ public class Central extends LinearOpMode{
 //------------------------CONFIGURATIONS----------------------
     //  Onboard Sensors (Dunno where to put this)
         public SensorManager mSensorManager;
-        public Sensor Magnetic= mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        public Sensor Accel= mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        float[] m_lastMagFields = new float[3];;
-        float[] m_lastAccels = new float[3];;
-        float[] m_rotationMatrix;
-        float[] m_
-
     //  Drivetrain
         public DcMotor motorFR;
         public DcMotor motorFL;
@@ -344,29 +335,18 @@ public class Central extends LinearOpMode{
     public void rotate(double speed, double degrees, Central.movements turnDirection)
     {
         //positive is clockwise
-        float R[];
-        float I[];
-        boolean success = mSensorManager.getRotationMatrix(R,null,)
-        float[] startpos = mSensorManager.getOrientation(,startpos);
-        float cur =0;
+        float[] startpos = mSensorManager.getOrientation();
+        float rel =0;
         switch(PHONEORIENTATION)
         {
             case faceup:
-                cur = -startpos[0];
+                rel = -startpos[0];
                 break;
             case facedown:
-                cur = startpos[0];
-                break;
-            case bottomedge:
-                cur = -startpos[2];
-                break;
-            case topedge:
-                cur = startpos [2];
+                rel = startpos[0];
                 break;
             case leftedge:
-                cur = -startpos[1];
-            case rightedge:
-                cur = startpos[1];
+                rel =
         }
         while(rel)
     }
@@ -632,36 +612,5 @@ public class Central extends LinearOpMode{
         }
     }
 
-    public void onSensorChanged(SensorEvent event) {
-        switch (event.sensor.getType()) {
-            case Sensor.TYPE_ACCELEROMETER:
-                System.arraycopy(event.values, 0, m_lastAccels, 0, 3);
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                System.arraycopy(event.values, 0, m_lastMagFields, 0, 3);
-                break;
-            default:
-                return;
-        }
-
-        computeOrientation();
-    }
-    private void computeOrientation() {
-        if (SensorManager.getRotationMatrix(m_rotationMatrix, null, m_lastAccels, m_lastMagFields)) {
-            SensorManager.getOrientation(m_rotationMatrix, m_orientation);
-
-            float yaw = (float) (Math.toDegrees(m_orientation[0]));
-            float pitch = (float) Math.toDegrees(m_orientation[1]);
-            float roll = (float) Math.toDegrees(m_orientation[2]);
-
-            Heading = filterYaw.lowPass(yaw);
-            Pitch = filterPitch.lowPass(pitch);
-            Roll = filterRoll.lowPass(roll);
-
-            if (mListener != null)
-                mListener.onSensorsStateChangeMagAcc();
-
-        }
-    }
 
 }
