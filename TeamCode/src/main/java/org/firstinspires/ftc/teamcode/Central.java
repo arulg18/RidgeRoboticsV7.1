@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import android.hardware.SensorManager;
 
 import java.util.Arrays;
 
@@ -31,8 +30,7 @@ public class Central extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
 
     //--------------------------CONSTANTS----------------------------
-            //-----------------Phone (dunno where to put this)-------
-                public static final phoneOrient PHONEORIENTATION = phoneOrient.faceup;
+
             //--------------------------ENCODERS---------------------
                 public static final double COUNTS_PER_MOTOR_NEVEREST = 1680;
                 public static final double COUNTS_PER_MOTOR_TETRIX = 1440;
@@ -166,16 +164,9 @@ public class Central extends LinearOpMode{
             public enum EncoderMode{
                 ON, OFF;
             }
-            public enum phoneOrient{
-                facedown,faceup,leftedge,rightedge,topedge,bottomedge;
-            }
-            public enum turnDirection{
-                cw,ccw;
-            }
 
 //------------------------CONFIGURATIONS----------------------
-    //  Onboard Sensors (Dunno where to put this)
-        public SensorManager mSensorManager;
+
     //  Drivetrain
         public DcMotor motorFR;
         public DcMotor motorFL;
@@ -332,24 +323,6 @@ public class Central extends LinearOpMode{
 
         }
     }
-    public void rotate(double speed, double degrees, Central.movements turnDirection)
-    {
-        //positive is clockwise
-        float[] startpos = mSensorManager.getOrientation();
-        float rel =0;
-        switch(PHONEORIENTATION)
-        {
-            case faceup:
-                rel = -startpos[0];
-                break;
-            case facedown:
-                rel = startpos[0];
-                break;
-            case leftedge:
-                rel =
-        }
-        while(rel)
-    }
     public void encoderMovement(double speed, double distance, double timeoutS, long waitAfter, Central.movements movement, DcMotor... motors) throws  InterruptedException{
 
         int[] targets = new int[motors.length];
@@ -492,6 +465,7 @@ public class Central extends LinearOpMode{
                 break;
         }
     }
+
 
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
