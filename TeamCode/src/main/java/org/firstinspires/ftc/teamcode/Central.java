@@ -415,7 +415,6 @@ public class Central extends LinearOpMode{
 
         jewelSensor.enableLed(JEWEL_SENSOR_LED_ON);
         sleep(1500);
-
         telemetry.addData("Blue Value: ", jewelSensor.blue());
         telemetry.update();
         boolean loopquit= true;
@@ -430,7 +429,7 @@ public class Central extends LinearOpMode{
                     } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
                         flick(flick.right);
                         loopquit=false;
-                    }
+                    }else{driveTrainEncoderMovement(0.2, 0.2, 0, 0, backward);}
                 }
                 break;
             case blue1:
@@ -443,7 +442,7 @@ public class Central extends LinearOpMode{
                     } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
                         flick(flick.left);
                         loopquit = false;
-                    }
+                    }else {driveTrainEncoderMovement(0.2, 0.2, 0, 0, backward);}
                 }
         }
         sleep(1000);
