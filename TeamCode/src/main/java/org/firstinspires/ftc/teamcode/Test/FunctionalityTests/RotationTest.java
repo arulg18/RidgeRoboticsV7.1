@@ -15,38 +15,20 @@ public class RotationTest extends Central {
 
     public ElapsedTime runtime = new ElapsedTime();
 
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
         super.setRuntime(runtime);
-
-        rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
-        leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
-
         waitForStart();
-        runtime.reset();
-        while (opModeIsActive()) {
-            telemetry.addLine("Speed 0.2");
-            telemetry.update();
-            powerMotors(0.2, 5000, rightTread, leftTread);
-            sleep(1000);
-            telemetry.addLine("Speed 0.4");
-            telemetry.update();
-            powerMotors(0.4, 5000, rightTread, leftTread);
-            sleep(1000);
-            telemetry.addLine("Speed 0.6");
-            telemetry.update();
-            powerMotors(0.6, 5000, rightTread, leftTread);
-            sleep(1000);
-            telemetry.addLine("Speed 0.8");
-            telemetry.update();
-            powerMotors(0.8, 5000, rightTread, leftTread);
-            sleep(1000);
-            telemetry.addLine("Speed 1.0");
-            telemetry.update();
-            powerMotors(1.0, 5000, rightTread, leftTread);
-            sleep(1000);
-            break;
-
-        }
+        turn(90, turnside.cw, 1);
+        telemetry.addLine("90 degrees, Speed 1, clockwise, center axis");
+        telemetry.update();
+        turn(90, turnside.ccw, 0.5);
+        telemetry.addLine("90 degrees, Speed 0.5, counterclockwise, center axis");
+        telemetry.update();
+        turn(90, turnside.ccw, 0.5, axis.front);
+        telemetry.addLine("90 degrees, Speed 0.5, counterclockwise, front axis");
+        telemetry.update();
+        turn(45, turnside.cw, 1, axis.back);
+        telemetry.addLine("45 degrees, Speed 1, counterclockwise, back axis");
+        telemetry.update();
     }
-
 }

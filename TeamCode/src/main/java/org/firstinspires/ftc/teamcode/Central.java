@@ -520,7 +520,14 @@ public class Central extends LinearOpMode{
         try{stopDrivetrain();}
         catch(java.lang.InterruptedException e){}
     }
-
+    public void turn(float target, turnside direction, double speed)
+    {
+        turn(target,direction,speed,axis.center);
+    }
+    public void turn(float target, turnside direction)
+    {
+        turn(target,direction,10);
+    }
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
         runtime = time;
