@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Arrays;
 
@@ -126,6 +131,11 @@ public class Central extends LinearOpMode{
                 bl(0, 1, -1, 0),
                 cw(-1, -1, -1, -1),
                 ccw(1, 1, 1, 1),
+                cwback(-1,-1,0,0),
+                ccwback(1,1,0,0),
+                cwfront(0,0,-1,-1),
+                ccwfront(0,0,1,1),
+
                 glyphUp,
                 glyphDown,
                 treadUp,
@@ -164,8 +174,20 @@ public class Central extends LinearOpMode{
             public enum EncoderMode{
                 ON, OFF;
             }
+            public enum turnside{
+                ccw,cw;
+            }
+            public enum axis{
+                front,center,back;
+            }
 
 //------------------------CONFIGURATIONS----------------------
+    // Sensor
+        BNO055IMU imu;
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        Orientation current;
+        float start;
+
 
     //  Drivetrain
         public DcMotor motorFR;
@@ -216,7 +238,7 @@ public class Central extends LinearOpMode{
 
 
     //------------------ARRAYS------------
-    public movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.cw, movements.ccw};
+    public movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.cw, movements.ccw,movements.cwback,movements.ccwback,movements.ccwfront,movements.cwfront};
     public DcMotor[] drivetrain = new DcMotor[4];
     public DcMotor[] glyphSystem = new DcMotor[3];
 
@@ -234,6 +256,7 @@ public class Central extends LinearOpMode{
                 setupJewel();
                 setupGlyph();
                 setupRelic();
+                setupIMU();
                 break;
             case teleop:
                 setupDrivetrain();
@@ -465,7 +488,33 @@ public class Central extends LinearOpMode{
                 break;
         }
     }
+    public void turn(float target, turnside direction, double speed, long waitAfter, axis rotation_Axis)
+    {
+        start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        end = start+;
+        boolean isstopped=true;
+        try {
+            switch (rotation_Axis) {
+                case center:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cw : movements.ccw);
+                    break;
+                case back:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwback : movements.ccwback);
+                    break;
+                case front:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwfront : movements.ccwfront);
+                    break;
+            }
+        }
+        catch(java.lang.InterruptedException e){}
 
+        while (!end.equals(current)&& opModeIsActive()&&isstopped)
+        {
+            current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+        try{stopDrivetrain();}
+        catch(java.lang.InterruptedException e){}
+    }
 
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
@@ -560,6 +609,16 @@ public class Central extends LinearOpMode{
     }
     public void setupGlyph() throws InterruptedException{}
 
+    public void setupIMU() throws InterruptedException{
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true; //copypasted from BNO055IMU sample code, no clue what this does
+        parameters.loggingTag          = "IMU"; //copypasted from BNO055IMU sample code, no clue what this does
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+    }
+
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
     public void driveTrainMovement(double speed, Central.movements movement) throws InterruptedException{
         double[] signs = movement.getDirections();
@@ -580,7 +639,7 @@ public class Central extends LinearOpMode{
         }
     }
 
-    public void stopDrivetrain() throws InterruptedException{
+    public void stopDrivetrain() throws InterruptedException{ //why does this throw interrupted lol
         for (DcMotor motor: drivetrain){
             motor.setPower(0);
         }
