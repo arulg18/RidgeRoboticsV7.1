@@ -188,6 +188,9 @@ public class Central extends LinearOpMode{
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         Orientation current;
         float start;
+        float end;
+
+        public static final String imuRedS = "imu";
 
 
     //  Drivetrain
@@ -455,6 +458,7 @@ public class Central extends LinearOpMode{
                         flick(flick.right);
                         loopquit=false;
                     }
+
                 }
                 break;
             case blue1:
@@ -489,11 +493,10 @@ public class Central extends LinearOpMode{
                 break;
         }
     }
-    public void turn(float target, turnside direction, double speed, long waitAfter, axis rotation_Axis)
-    {
+    public void turn(float target, turnside direction, double speed, axis rotation_Axis) {
         start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        end = start+;
-        boolean isstopped=true;
+        end = start + ((direction==turnside.cw)?target:-target);
+        boolean isnotstopped=true;
         try {
             switch (rotation_Axis) {
                 case center:
@@ -507,9 +510,10 @@ public class Central extends LinearOpMode{
                     break;
             }
         }
-        catch(java.lang.InterruptedException e){}
+        catch(java.lang.InterruptedException e){isnotstopped = false;}
 
-        while (!end.equals(current)&& opModeIsActive()&&isstopped)
+
+        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
         {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         }
@@ -616,9 +620,9 @@ public class Central extends LinearOpMode{
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = true; //copypasted from BNO055IMU sample code, no clue what this does
         parameters.loggingTag          = "IMU"; //copypasted from BNO055IMU sample code, no clue what this does
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, imuRedS);
         imu.initialize(parameters);
-    }
+}
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
     public void driveTrainMovement(double speed, Central.movements movement) throws InterruptedException{
