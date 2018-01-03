@@ -73,7 +73,8 @@ public class Vuforia extends Central {
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        CentralClass(setupType.all);
+        CentralClass(setupType.drive);
+
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
