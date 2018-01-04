@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.sun.tools.javac.tree.DCTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -90,6 +91,20 @@ public class Central extends LinearOpMode{
                  //  Increments
                     public static final double INCREMENT_POSITION_DOWN = 0.01;
                     public static final long INCREMENT_FREQUENCY_DOWN = 50;
+
+            //--------------Glyph System------------------
+
+                //  Minimum Positions
+                public static final double MIN_POSITION_PULL = 0;
+
+                //  Maximum Positions
+                public static final double MAX_POSITION_PULL = 1;
+
+                //  Initial Positions
+                public static final double START_POSITION_PULL = 0.5;
+
+                //  Significant Positions
+
 
 
             //--------------Relic System------------------
@@ -191,6 +206,7 @@ public class Central extends LinearOpMode{
         Orientation current;
         float start;
         float end;
+        public static boolean isnotstopped;
 
         public static final String imuRedS = "imu";
 
@@ -231,15 +247,15 @@ public class Central extends LinearOpMode{
 
 
     //  Relic Systems
-        public DcMotor relicMotor;
+        public DcMotor relicMotorOut;
+        public DcMotor relicMotorIn;
         public Servo angleServo;
-        public Servo rightClaw;
-        public Servo leftClaw;
+        public Servo Claw;
 
-        public static final String relicMotorS = "relicMotor"; // updated //Configured
+        public static final String relicMotorOutS = "relicMotorOut";
+        public static final String relicMotorInS = "relicMotorIn";
         public static final String angleServoS = "angleServo";
-        public static final String rightClawS = "rightClaw";
-        public static final String leftClawS = "leftClaw";
+        public static final String ClawS = "Claw";
 
 
 
@@ -497,8 +513,8 @@ public class Central extends LinearOpMode{
     }
     public void turn(float target, turnside direction, double speed, axis rotation_Axis) {
         start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        end = start + ((direction==turnside.cw)?target:-target);
-        boolean isnotstopped=true;
+        end = start + ((direction == turnside.cw) ? target : -target);
+        isnotstopped = true;
         try {
             switch (rotation_Axis) {
                 case center:
@@ -511,8 +527,10 @@ public class Central extends LinearOpMode{
                     driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwfront : movements.ccwfront);
                     break;
             }
+        } catch (java.lang.InterruptedException e) {
+            isnotstopped = false;
         }
-        catch(java.lang.InterruptedException e){isnotstopped = false;}
+    }
 
     public void newFlick(team side) throws InterruptedException{
         centerFlicker(10);
@@ -555,9 +573,8 @@ public class Central extends LinearOpMode{
         }
         sleep(1000);
         centerFlicker(0);
-    }
 
-        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
+        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&& isnotstopped)
         {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         }
@@ -655,7 +672,12 @@ public class Central extends LinearOpMode{
 
         motorDriveMode(EncoderMode.ON, motorFR, motorFL, motorBR, motorBL);
     }
-    public void setupRelic() throws InterruptedException{}// FINISH
+    public void setupRelic() throws InterruptedException{
+        angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
+        Claw = servo(Claw, hardwareMap, ClawS, Servo.Direction.FORWARD, MIN_POSITION_CLAW, MAX_POSITION_CLAW, START_POSITION_CLAW);
+        relicMotorOut = motor(relicMotorOut, hardwareMap, relicMotorOutS, DcMotorSimple.Direction.FORWARD);
+        relicMotorIn = motor(relicMotorIn, hardwareMap, relicMotorInS, DcMotorSimple.Direction.FORWARD);
+    }// FINISH
     public void setupJewel() throws InterruptedException{
         jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, START_POSITION_DOWN);
         jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, START_POSITION_FLICK);
@@ -663,7 +685,11 @@ public class Central extends LinearOpMode{
         jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, JEWEL_SENSOR_LED_ON);
 
     }
-    public void setupGlyph() throws InterruptedException{}
+    public void setupGlyph() throws InterruptedException{
+        pullServo = servo(pullServo, hardwareMap, pullServoS, Servo.Direction.FORWARD, MIN_POSITION_PULL, MAX_POSITION_PULL, START_POSITION_PULL);
+        leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+        rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+    }
 
     public void setupIMU() throws InterruptedException{
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -686,7 +712,7 @@ public class Central extends LinearOpMode{
     }
     public void driveTrainMovementAccelerate(double speed, Central.movements movement) throws InterruptedException{
         double[] signs = movement.getDirections();
-        for (double i = 0; i <= speed; i+=.05) {
+        for (double i = 0; i <= speed; i+=.1) {
             for (DcMotor motor : drivetrain) {
                 int x = Arrays.asList(drivetrain).indexOf(motor);
                 motor.setPower(signs[x] * i);
