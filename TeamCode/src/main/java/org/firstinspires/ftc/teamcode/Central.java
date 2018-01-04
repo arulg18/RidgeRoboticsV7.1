@@ -56,8 +56,10 @@ public class Central extends LinearOpMode{
             //--------------------------TELE-OP VALUES-------------------------
                 public static final double ROTATION_SPEED = 0.4;
                 public static final double DEAD_ZONE_SIZE = 0.1;
-                public static final double D_PAD_SPEED = 0.2;
-        //--------------------------SERVO CONFIGURATIONS-----------------
+                public static final double D_PAD_SPEED = 0.4;
+                public static final double CRAWL_SPEED = 0.2;
+
+    //--------------------------SERVO CONFIGURATIONS-----------------
 
             //--------------Jewel System------------------
 
@@ -515,6 +517,48 @@ public class Central extends LinearOpMode{
         }
         catch(java.lang.InterruptedException e){isnotstopped = false;}
 
+    public void newFlick(team side) throws InterruptedException{
+        centerFlicker(10);
+
+        sweepServo(jewelDown, LOW_POSITION_DOWN, INCREMENT_POSITION_DOWN, INCREMENT_FREQUENCY_DOWN);
+
+        jewelSensor.enableLed(JEWEL_SENSOR_LED_ON);
+        sleep(1500);
+
+        telemetry.addData("Blue Value: ", jewelSensor.blue());
+        telemetry.update();
+        boolean loopquit= true;
+        switch (side){
+            case red1:
+            case red2:
+                while(loopquit) {
+
+                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
+                        flick(flick.left);
+                        loopquit=false;
+
+                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
+                        flick(flick.right);
+                        loopquit=false;
+                    }
+                }
+                break;
+            case blue1:
+            case blue2:
+                while(loopquit) {
+                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
+                        flick(flick.right);
+                        loopquit = false;
+
+                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
+                        flick(flick.left);
+                        loopquit = false;
+                    }
+                }
+        }
+        sleep(1000);
+        centerFlicker(0);
+    }
 
         while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
         {
