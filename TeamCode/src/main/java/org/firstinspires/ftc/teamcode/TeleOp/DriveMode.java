@@ -43,6 +43,8 @@ public class DriveMode extends Central {
             yAxis2 = Range.clip(yAxis2, -1, 1);
             xAxis2 = Range.clip(xAxis2, -1, 1);
 
+            tipcorrect();
+
             if(leftStickButtonPressed){
                 // CLOCKWISE
                 driveTrainMovement(ROTATION_SPEED, movements.cw);
