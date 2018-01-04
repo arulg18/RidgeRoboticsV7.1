@@ -513,6 +513,13 @@ public class Central extends LinearOpMode{
             }
         }
         catch(java.lang.InterruptedException e){isnotstopped = false;}
+        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
+        {
+            current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+        try{stopDrivetrain();}
+        catch(java.lang.InterruptedException e){}
+    }
 
     public void newFlick(team side) throws InterruptedException{
         centerFlicker(10);
@@ -557,13 +564,7 @@ public class Central extends LinearOpMode{
         centerFlicker(0);
     }
 
-        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
-        {
-            current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        }
-        try{stopDrivetrain();}
-        catch(java.lang.InterruptedException e){}
-    }
+
     public void turn(float target, turnside direction, double speed)
     {
         turn(target,direction,speed,axis.center);
@@ -571,6 +572,50 @@ public class Central extends LinearOpMode{
     public void turn(float target, turnside direction)
     {
         turn(target,direction,10);
+    }
+    public void tipcorrect()
+    {
+        xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+        ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        double angleoff = Math.pow((Math.sin(Math.toRadians((double)xtilt))),2)+ Math.pow(Math.sin(Math.toRadians((double)(ytilt))),2);
+        if(angleoff>Math.sin(Math.toRadians(sensitivity))){
+            if((xtilt>0&&ytilt>0&&ytilt<xtilt)||(xtilt>0&&ytilt<0&&xtilt>-ytilt))//right
+            {
+                movetry(movements.right);
+            }
+            else if((xtilt>0&&ytilt>0&&xtilt<ytilt)||(xtilt<0&&ytilt>0&&-xtilt<ytilt))//forwards
+            {
+                movetry(movements.forward);
+            }
+            else if((xtilt<0&&ytilt>0&&-xtilt>ytilt)||(xtilt<0&&ytilt<0&&-xtilt>-ytilt))//left
+            {
+                movetry(movements.left);
+            }
+            else if((xtilt<0&&ytilt<0&&-xtilt>-ytilt)||(xtilt>0&&ytilt<0&&xtilt<-ytilt))//back
+            {
+                movetry(movements.backward);
+            }
+        }
+        else {
+            try{
+                stopDrivetrain();
+            }
+            catch(java.lang.InterruptedException i){}
+        }
+    }
+
+    public void movetry(movements direction)
+    {
+        try {
+            driveTrainMovement(10,direction);
+        }
+        catch(java.lang.InterruptedException e)
+        {
+            try{
+                stopDrivetrain();
+            }
+            catch(java.lang.InterruptedException i){}
+        }
     }
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
