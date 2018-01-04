@@ -45,8 +45,8 @@ public class DriveMode extends Central {
             yAxis2 = Range.clip(yAxis2, -1, 1);
             xAxis2 = Range.clip(xAxis2, -1, 1);
 
-            if (gamepad1.right_bumper) {
-                crawlModeIsOn = !crawlModeIsOn;
+            tipcorrect();
+
             }
             if (crawlModeIsOn) {
                 if (leftStickButtonPressed) {
