@@ -24,11 +24,8 @@ import java.util.Arrays;
 *
  */
 //THINGS TO ADD LIST BELOW
-/*
-* Jewel flicker if too close moves back a little
-* ADD CRAWL MODE FOR GAMEPAD
-* GYROSCOPE FOR BALANCE WITH IMU
-* GLYPH SYSTEM SETUP
+/*TODO Glyph System SETUP
+* TODO Jewel flicker if too close moves back a little
 * */
 
 public class Central extends LinearOpMode{
@@ -463,7 +460,9 @@ public class Central extends LinearOpMode{
                         flick(flick.right);
                         loopquit=false;
                     }
-
+                    if(jewelFlick.getPosition()+0.09<LEFT_POSITION_FLICK) {
+                        jewelFlick.setPosition(jewelFlick.getPosition() + 0.02);
+                    }
                 }
                 break;
             case blue1:
@@ -476,6 +475,9 @@ public class Central extends LinearOpMode{
                     } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
                         flick(flick.left);
                         loopquit = false;
+                    }
+                    if(jewelFlick.getPosition()+0.09<LEFT_POSITION_FLICK) {
+                        jewelFlick.setPosition(jewelFlick.getPosition() + 0.02);
                     }
                 }
                 break;
