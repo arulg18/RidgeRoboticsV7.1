@@ -21,7 +21,7 @@ public class DriveModeAccel extends Central {
 
         while (opModeIsActive()) {
             //ADD CRAW
-
+            tipcorrect();
             float yAxis1 = -gamepad1.left_stick_y; // Main Directions y-axis
             float xAxis1 = gamepad1.left_stick_x;  // Main Directions x-axis
 
