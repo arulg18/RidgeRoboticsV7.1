@@ -191,7 +191,9 @@ public class Central extends LinearOpMode{
         Orientation current;
         float start;
         float end;
-        
+        float xtilt;
+        float ytilt;
+        public static final double sensitivity =10;
 
         public static final String imuRedS = "imu";
 
@@ -596,6 +598,7 @@ public class Central extends LinearOpMode{
             {
                 movetry(movements.backward);
             }
+            tipcorrect();
         }
         else {
             try{
