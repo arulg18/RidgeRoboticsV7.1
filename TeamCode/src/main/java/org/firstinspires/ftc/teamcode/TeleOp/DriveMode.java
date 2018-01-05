@@ -38,9 +38,10 @@ public class DriveMode extends Central {
 
         while (opModeIsActive()) {
             //ADD CRAW
-
+            //tipcorrect();
             yAxis1 = -gamepad1.left_stick_y; // Main Directions y-axis
             xAxis1 = gamepad1.left_stick_x;  // Main Directions x-axis
+
 
             yAxis2 = -gamepad1.right_stick_y; // Diagonal Directions y-axis
             xAxis2 = gamepad1.right_stick_x;  // Diagonal Directions x-axis
