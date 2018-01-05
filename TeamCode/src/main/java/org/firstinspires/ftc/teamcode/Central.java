@@ -60,6 +60,13 @@ public class Central extends LinearOpMode{
                 public static final double D_PAD_SPEED = 0.4;
                 public static final double CRAWL_SPEED = 0.2;
 
+            //-----------------------------POSITIONS--------------------------
+                public static final int RedX = 24;
+                public static final int BlueX = 120;
+                public static final int OneY = 120;
+                public static final int TwoY = 24;
+
+
     //--------------------------SERVO CONFIGURATIONS-----------------
 
             //--------------Jewel System------------------
@@ -281,7 +288,35 @@ public class Central extends LinearOpMode{
                 setupJewel();
                 setupGlyph();
                 setupRelic();
-                setupIMU();
+                break;
+            case teleop:
+                setupDrivetrain();
+                setupJewel();
+                setupGlyph();
+                setupRelic();
+                break;
+            case drive:
+                setupDrivetrain();
+                break;
+            case jewel:
+                setupJewel();
+                break;
+            case relic:
+                setupRelic();
+                break;
+            case glyph:
+                setupGlyph();
+                break;
+        }
+    }
+    public void CentralClass(setupType setup, team player) throws InterruptedException{
+        switch (setup){
+            case all:
+                setupDrivetrain();
+                setupJewel();
+                setupGlyph();
+                setupRelic();
+                setupIMU(player);
                 break;
             case teleop:
                 setupDrivetrain();
@@ -538,7 +573,6 @@ public class Central extends LinearOpMode{
         } catch (java.lang.InterruptedException e) {
             isnotstopped = false;
         }
-        catch(java.lang.InterruptedException e){isnotstopped = false;}
         while (!((end<=current.firstAngle+1)&& end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
         {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -548,7 +582,7 @@ public class Central extends LinearOpMode{
 
     }
 
-    public void newFlick(team side) throws InterruptedException{
+    public void newFlick(team side) throws InterruptedException {
         centerFlicker(10);
 
         sweepServo(jewelDown, LOW_POSITION_DOWN, INCREMENT_POSITION_DOWN, INCREMENT_FREQUENCY_DOWN);
@@ -558,25 +592,25 @@ public class Central extends LinearOpMode{
 
         telemetry.addData("Blue Value: ", jewelSensor.blue());
         telemetry.update();
-        boolean loopquit= true;
-        switch (side){
+        boolean loopquit = true;
+        switch (side) {
             case red1:
             case red2:
-                while(loopquit) {
+                while (loopquit) {
 
                     if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
                         flick(flick.left);
-                        loopquit=false;
+                        loopquit = false;
 
                     } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
                         flick(flick.right);
-                        loopquit=false;
+                        loopquit = false;
                     }
                 }
                 break;
             case blue1:
             case blue2:
-                while(loopquit) {
+                while (loopquit) {
                     if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
                         flick(flick.right);
                         loopquit = false;
@@ -589,7 +623,7 @@ public class Central extends LinearOpMode{
         }
         sleep(1000);
         centerFlicker(0);
-
+    }
 
     public void turn(float target, turnside direction, double speed)
     {
@@ -755,14 +789,26 @@ public class Central extends LinearOpMode{
         imu = hardwareMap.get(BNO055IMU.class, imuRedS);
         imu.initialize(parameters);
         Position startpos;
-        switch (side){
+        switch (side) {
             case red1:
-                startpos = new Position(DistanceUnit.INCH,12,12);
+                startpos = new Position(DistanceUnit.INCH, RedX, 120, 0, 0);
                 break;
             case red2:
+                startpos = new Position(DistanceUnit.INCH, 24, 48, 0, 0);
+                break;
             case blue1:
+                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+                break;
+            case blue2:
+                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+                break;
+            default:
+                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+                break;
+        }
         Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
-        imu.AccelerationIntegrator.initialize(parameters,,veloInit);
+        imu.AccelerationIntegrator.initialize(parameters,startpos,veloInit);
+
 }
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
