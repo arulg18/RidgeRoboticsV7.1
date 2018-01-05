@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.Central;
 /**
  * Created by arulgupta on 12/14/17.
  */
-@Autonomous(name = "RotationTest", group = "Test")
+
+@Autonomous(name = "Rotation Test", group = "Test")
 
 public class RotationTest extends Central {
 
