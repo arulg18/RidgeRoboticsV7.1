@@ -14,8 +14,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Arrays;
 
@@ -717,7 +719,7 @@ public class Central extends LinearOpMode{
     }
     public void setupGlyph() throws InterruptedException{}
 
-    public void setupIMU() throws InterruptedException{
+    public void setupIMU(team side) throws InterruptedException{
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -725,6 +727,15 @@ public class Central extends LinearOpMode{
         parameters.loggingTag          = "IMU"; //copypasted from BNO055IMU sample code, no clue what this does
         imu = hardwareMap.get(BNO055IMU.class, imuRedS);
         imu.initialize(parameters);
+        Position startpos;
+        switch (side){
+            case red1:
+                startpos = new Position(DistanceUnit.INCH,12,12);
+                break;
+            case red2:
+            case blue1:
+        Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
+        imu.AccelerationIntegrator.initialize(parameters,,veloInit);
 }
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
