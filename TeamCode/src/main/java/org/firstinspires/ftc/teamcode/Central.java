@@ -536,7 +536,6 @@ public class Central extends LinearOpMode{
         } catch (java.lang.InterruptedException e) {
             isnotstopped = false;
         }
-        catch(java.lang.InterruptedException e){isnotstopped = false;}
         while (!((end<=current.firstAngle+1)&& end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
         {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -546,7 +545,7 @@ public class Central extends LinearOpMode{
 
     }
 
-    public void newFlick(team side) throws InterruptedException{
+    public void newFlick(team side) throws InterruptedException {
         centerFlicker(10);
 
         sweepServo(jewelDown, LOW_POSITION_DOWN, INCREMENT_POSITION_DOWN, INCREMENT_FREQUENCY_DOWN);
@@ -556,25 +555,25 @@ public class Central extends LinearOpMode{
 
         telemetry.addData("Blue Value: ", jewelSensor.blue());
         telemetry.update();
-        boolean loopquit= true;
-        switch (side){
+        boolean loopquit = true;
+        switch (side) {
             case red1:
             case red2:
-                while(loopquit) {
+                while (loopquit) {
 
                     if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
                         flick(flick.left);
-                        loopquit=false;
+                        loopquit = false;
 
                     } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
                         flick(flick.right);
-                        loopquit=false;
+                        loopquit = false;
                     }
                 }
                 break;
             case blue1:
             case blue2:
-                while(loopquit) {
+                while (loopquit) {
                     if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
                         flick(flick.right);
                         loopquit = false;
@@ -587,6 +586,7 @@ public class Central extends LinearOpMode{
         }
         sleep(1000);
         centerFlicker(0);
+    }
 
 
     public void turn(float target, turnside direction, double speed)
