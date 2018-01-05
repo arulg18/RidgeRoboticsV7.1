@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 import java.util.Arrays;
 
@@ -518,7 +519,7 @@ public class Central extends LinearOpMode{
             }
         }
         catch(java.lang.InterruptedException e){isnotstopped = false;}
-        while (!((end<=current.firstAngle+1)||end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
+        while (!((end<=current.firstAngle+1)&& end>current.firstAngle-1)&& opModeIsActive()&&isnotstopped)
         {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         }
