@@ -631,6 +631,10 @@ public class Central extends LinearOpMode{
     {
         turn(target,direction,speed,axis.center);
     }
+    public void absturn(float target, turnside direction, double speed)
+    {
+
+    }
     public void turn(float target, turnside direction)
     {
         turn(target,direction,10);
@@ -701,14 +705,14 @@ public class Central extends LinearOpMode{
         motor.setPower(0);
         return motor;
     }
-    public void MovetoPos(double xtarget, double ytarget, float endangle){
+    public void MovetoPos(double xtarget, double ytarget){
         double x;
         double y;
-        Position currentPos = new Position(DistanceUnit.INCH,0,0,0,0);
+        Position currentPos;
         boolean goalnotreached =true;
         while(opModeIsActive()&&goalnotreached)
         {
-            currentPos = getPosition();
+            currentPos = integrator.getPosition();
             x = xtarget - currentPos.x;
             y = ytarget - currentPos.y;
             if((x>0&&y>0&&y<x)||(x>0&&y<0&&x>-y))//right
@@ -731,12 +735,13 @@ public class Central extends LinearOpMode{
 
             if(-2<x&&x<2&&-2<y&&y<2)
             {goalnotreached= false;}
-            MovetoPos(x,y,endangle);
+            MovetoPos(x,y); //recursion
         }
         try{stopDrivetrain();}
         catch(java.lang.InterruptedException e)
         {}
     }
+
     public void motorDriveMode(EncoderMode mode, DcMotor... motor) throws InterruptedException{
         switch (mode){
             case ON:
@@ -827,7 +832,7 @@ public class Central extends LinearOpMode{
         imu = hardwareMap.get(BNO055IMU.class, imuRedS);
         imu.initialize(parameters);
         Position startpos;
-        switch (side) {
+        switch (side) { //initialize the position with correct coordinates
             case red1:
                 startpos = new Position(DistanceUnit.INCH, RedX, OneY, 0, 0);
                 break;
@@ -840,10 +845,11 @@ public class Central extends LinearOpMode{
             case blue2:
                 startpos = new Position(DistanceUnit.INCH, BlueX, TwoY, 0, 0);
                 break;
-            default:
-                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+            default:// never happens, but needed to compile
+                startpos = new Position();
                 break;
         }
+        //origin is @bottom left
         Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
         integrator.initialize(parameters,startpos,veloInit);
         
