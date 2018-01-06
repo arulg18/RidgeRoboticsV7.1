@@ -556,7 +556,7 @@ public class Central extends LinearOpMode{
                 break;
         }
     }
-    public void turn(float target, turnside direction, double speed, axis rotation_Axis) {
+    public void turn(float target, turnside direction, double speed, axis rotation_Axis) throws InterruptedException{
         start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         end = start + ((direction == turnside.cw) ? target : -target);
         isnotstopped = true;
@@ -627,7 +627,7 @@ public class Central extends LinearOpMode{
         centerFlicker(0);
     }
 
-    public void turn(float target, turnside direction, double speed)
+    public void turn(float target, turnside direction, double speed)throws InterruptedException
     {
         turn(target,direction,speed,axis.center);
     }
@@ -635,11 +635,11 @@ public class Central extends LinearOpMode{
     {
 
     }
-    public void turn(float target, turnside direction)
+    public void turn(float target, turnside direction)throws InterruptedException
     {
         turn(target,direction,10);
     }
-    public void tipcorrect()
+    public void tipcorrect() throws InterruptedException
     {
         xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
         ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
@@ -661,7 +661,13 @@ public class Central extends LinearOpMode{
             {
                 movetry(movements.backward);
             }
-            tipcorrect();
+            try{tipcorrect();}
+            catch(java.lang.InterruptedException e){
+                try{
+                    stopDrivetrain();
+                }
+                catch(java.lang.InterruptedException i){}
+            }
         }
         else {
             try{
@@ -705,7 +711,7 @@ public class Central extends LinearOpMode{
         motor.setPower(0);
         return motor;
     }
-    public void MovetoPos(double xtarget, double ytarget){
+    public void MovetoPos(double xtarget, double ytarget) throws InterruptedException{
         double x;
         double y;
         Position currentPos;
