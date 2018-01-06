@@ -210,6 +210,7 @@ public class Central extends LinearOpMode{
 //------------------------CONFIGURATIONS----------------------
     // Sensor
         BNO055IMU imu;
+        NaiveAccelerationIntegrator integrator;
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         Orientation current;
         float start;
@@ -844,9 +845,8 @@ public class Central extends LinearOpMode{
                 break;
         }
         Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
-        NaiveAccelerationIntegrator integrator = new NaiveAccelerationIntegrator();
-        imu.AccelerationIntegrator.initialize(parameters,startpos,veloInit);
-
+        integrator.initialize(parameters,startpos,veloInit);
+        
 }
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
