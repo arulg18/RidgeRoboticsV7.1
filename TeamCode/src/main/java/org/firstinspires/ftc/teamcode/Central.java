@@ -213,6 +213,7 @@ public class Central extends LinearOpMode{
         NaiveAccelerationIntegrator integrator;
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         Orientation current;
+        float initorient;
         float start;
         float end;
         float xtilt;
@@ -633,7 +634,10 @@ public class Central extends LinearOpMode{
     }
     public void absturn(float target, turnside direction, double speed)
     {
+        float turnval=imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - (target+initorient);
 
+        try {turn(Math.abs(turnval),(turnval<0)?turnside.ccw:turnside.cw);}
+        catch(java.lang.InterruptedException e){}
     }
     public void turn(float target, turnside direction)throws InterruptedException
     {
@@ -855,10 +859,10 @@ public class Central extends LinearOpMode{
                 startpos = new Position();
                 break;
         }
-        //origin is @bottom left
+        //origin is @ bottom left
         Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
         integrator.initialize(parameters,startpos,veloInit);
-        
+        initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 }
 
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
