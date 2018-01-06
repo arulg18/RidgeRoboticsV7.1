@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
 import com.sun.tools.javac.tree.DCTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -699,6 +700,42 @@ public class Central extends LinearOpMode{
         motor.setPower(0);
         return motor;
     }
+    public void MovetoPos(double xtarget, double ytarget, float endangle){
+        double x;
+        double y;
+        Position currentPos = new Position(DistanceUnit.INCH,0,0,0,0);
+        boolean goalnotreached =true;
+        while(opModeIsActive()&&goalnotreached)
+        {
+            currentPos = getPosition();
+            x = xtarget - currentPos.x;
+            y = ytarget - currentPos.y;
+            if((x>0&&y>0&&y<x)||(x>0&&y<0&&x>-y))//right
+            {
+                movetry(movements.right);
+            }
+            else if((x>0&&y>0&&x<y)||(x<0&&y>0&&-x<y))//forwards
+            {
+                movetry(movements.forward);
+            }
+            else if((x<0&&y>0&&-x>y)||(x<0&&y<0&&-x>-y))//left
+            {
+                movetry(movements.left);
+            }
+            else if((x<0&&y<0&&-x>-y)||(x>0&&y<0&&x<-y))//back
+            {
+                movetry(movements.backward);
+            }
+
+
+            if(-2<x&&x<2&&-2<y&&y<2)
+            {goalnotreached= false;}
+            MovetoPos(x,y,endangle);
+        }
+        try{stopDrivetrain();}
+        catch(java.lang.InterruptedException e)
+        {}
+    }
     public void motorDriveMode(EncoderMode mode, DcMotor... motor) throws InterruptedException{
         switch (mode){
             case ON:
@@ -791,22 +828,23 @@ public class Central extends LinearOpMode{
         Position startpos;
         switch (side) {
             case red1:
-                startpos = new Position(DistanceUnit.INCH, RedX, 120, 0, 0);
+                startpos = new Position(DistanceUnit.INCH, RedX, OneY, 0, 0);
                 break;
             case red2:
-                startpos = new Position(DistanceUnit.INCH, 24, 48, 0, 0);
+                startpos = new Position(DistanceUnit.INCH, RedX, TwoY, 0, 0);
                 break;
             case blue1:
-                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+                startpos = new Position(DistanceUnit.INCH, BlueX, OneY, 0, 0);
                 break;
             case blue2:
-                startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
+                startpos = new Position(DistanceUnit.INCH, BlueX, TwoY, 0, 0);
                 break;
             default:
                 startpos = new Position(DistanceUnit.INCH, 120, 120, 0, 0);
                 break;
         }
         Velocity veloInit = new Velocity(DistanceUnit.INCH,0,0,0,0);
+        NaiveAccelerationIntegrator integrator = new NaiveAccelerationIntegrator();
         imu.AccelerationIntegrator.initialize(parameters,startpos,veloInit);
 
 }
