@@ -73,7 +73,7 @@ public class Autonomous_Red1 extends Central {
             }
 
             telemetry.update();
-// hello
+
             switch(position){
                 case 0:         //Left
                     driveTrainEncoderMovement(0.5, 44, 10, 100, movements.backward);
