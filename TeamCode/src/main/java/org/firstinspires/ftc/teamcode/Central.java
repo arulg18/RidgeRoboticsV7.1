@@ -49,13 +49,17 @@ public class Central extends LinearOpMode{
                         (WHEEL_DIAMETER_INCHES * 3.1415);               // Conversion: Encoder Counts Motor Tetrix to Inches
 
                 public static final int BLUE_COLOR_VALUE = 1;
-                public static final int RED_COLOR_VALUE= 1;
+                public static final int RED_COLOR_VALUE= 5;
 
                 public static final boolean JEWEL_SENSOR_LED_ON = true;
+                public static int count = 0;
+                public static final int DEGREE_90 = 18;
 
 
-            //--------------------------TELE-OP VALUES-------------------------
-                public static final double ROTATION_SPEED = 0.4;
+
+
+    //--------------------------TELE-OP VALUES-------------------------
+                public static final double ROTATION_SPEED = 0.8;
                 public static final double DEAD_ZONE_SIZE = 0.1;
                 public static final double D_PAD_SPEED = 0.4;
                 public static final double CRAWL_SPEED = 0.2;
@@ -79,11 +83,11 @@ public class Central extends LinearOpMode{
                 //  Significant Positions
 
                     //  Centered Positions
-                    public static final double CENTER_POSITION_DOWN = 0.63;
+                    public static final double CENTER_POSITION_DOWN = 0.5;
                     public static final double CENTER_POSITION_FLICK = 0.46;
 
                     //  Flick Positions
-                    public static final double LOW_POSITION_DOWN = 0.05;
+                    public static final double LOW_POSITION_DOWN = 0;
                     public static final double RIGHT_POSITION_FLICK = CENTER_POSITION_FLICK - 0.36;
                     public static final double LEFT_POSITION_FLICK = CENTER_POSITION_FLICK + 0.36;
 
@@ -101,13 +105,16 @@ public class Central extends LinearOpMode{
                 public static final double MAX_POSITION_PULL = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_PULL = 0.5;
+                public static final double START_POSITION_PULL = 1;
 
                 //  Significant Positions
+                public static final double LOW_POSITION_PULL = 0.4;
+                public static final double HIGH_POSITION_PULL = 1;
 
 
 
-            //--------------Relic System------------------
+
+    //--------------Relic System------------------
 
                 //  Minimum Positions
                 public static final double MIN_POSITION_CLAW = 0;
@@ -283,8 +290,10 @@ public class Central extends LinearOpMode{
             case teleop:
                 setupDrivetrain();
                 setupJewel();
+                centerFlicker(0);
                 setupGlyph();
                 setupRelic();
+                setupIMU();
                 break;
             case drive:
                 setupDrivetrain();
@@ -429,12 +438,12 @@ public class Central extends LinearOpMode{
 
 
     //------------------JEWEL FUNCTIONS------------------------------------------------------------------------
-    public void centerFlicker(long waitAfter){
+    public void centerFlicker(long waitAfter) throws InterruptedException{
         jewelDown.setPosition(CENTER_POSITION_DOWN);
         jewelFlick.setPosition(CENTER_POSITION_FLICK);
         sleep(800 + waitAfter);
     }
-    public void initialPositionFlicker(long waitAfter){
+    public void initialPositionFlicker(long waitAfter) throws InterruptedException{
         jewelDown.setPosition(START_POSITION_DOWN);
         jewelFlick.setPosition(START_POSITION_FLICK);
         sleep(200);
@@ -442,16 +451,63 @@ public class Central extends LinearOpMode{
     public void sweepServo(Servo servo, double EndPosition, double increment, long incrementSpeed) throws InterruptedException{
         if (servo.getPosition() > EndPosition){
             for (double p = servo.getPosition(); servo.getPosition() > EndPosition; p-= increment){
+                if (!opModeIsActive()){
+                    break;
+                }
                 servo.setPosition(p);
                 sleep(incrementSpeed);
             }
         }else {
             for (double p = servo.getPosition(); servo.getPosition() < EndPosition; p+= increment){
+                if (!opModeIsActive()){
+                    break;
+                }
                 servo.setPosition(p);
                 sleep(incrementSpeed);
             }
         }
 
+    }
+    public void Red() throws InterruptedException{
+
+        if (jewelSensor.red() >= RED_COLOR_VALUE) { //FLICK REG
+            flick(flick.left);
+            telemetry.addLine("Red");
+            telemetry.update();
+
+        } else if (jewelSensor.blue() >= BLUE_COLOR_VALUE) {                               //FLICK OPPOSITE
+            flick(flick.right);
+            telemetry.addLine("Blue");
+            telemetry.update();
+        }
+        else{
+            jewelFlick.setPosition(jewelFlick.getPosition() - .01);
+            if (count < 5){
+                Red();
+                count++;
+            }
+
+        }
+    }
+    public void Blue() throws InterruptedException{
+        if (jewelSensor.red() >= RED_COLOR_VALUE) { //FLICK REG
+            flick(flick.right);
+            telemetry.addLine("Red");
+            telemetry.update();
+
+        } else if (jewelSensor.blue() >= BLUE_COLOR_VALUE) {                               //FLICK OPPOSITE
+            flick(flick.left);
+            telemetry.addLine("Blue");
+            telemetry.update();
+        }
+        else {
+            jewelFlick.setPosition(jewelFlick.getPosition() - .01);
+
+            if (count < 5){
+                Blue();
+                count++;
+            }
+        }
     }
     public void flick(team side) throws InterruptedException{
         centerFlicker(10);
@@ -460,37 +516,19 @@ public class Central extends LinearOpMode{
 
         jewelSensor.enableLed(JEWEL_SENSOR_LED_ON);
         sleep(1500);
-
         telemetry.addData("Blue Value: ", jewelSensor.blue());
         telemetry.update();
-        boolean loopquit= true;
         switch (side){
             case red1:
             case red2:
-                while(loopquit) {
-                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
-                        flick(flick.left);
-                        loopquit=false;
 
-                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
-                        flick(flick.right);
-                        loopquit=false;
-                    }
 
-                }
+                Red();
                 break;
             case blue1:
             case blue2:
-                while(loopquit) {
-                    if (jewelSensor.blue() >= BLUE_COLOR_VALUE) { //FLICK REG
-                        flick(flick.right);
-                        loopquit = false;
 
-                    } else if (jewelSensor.red() >= RED_COLOR_VALUE) {                               //FLICK OPPOSITE
-                        flick(flick.left);
-                        loopquit = false;
-                    }
-                }
+                Blue();
                 break;
         }
         sleep(1000);
@@ -501,17 +539,20 @@ public class Central extends LinearOpMode{
             case left:
                 jewelFlick.setPosition(LEFT_POSITION_FLICK);
                 telemetry.addData("Position:", jewelFlick.getPosition());
+                telemetry.addLine("Left");
                 telemetry.update();
 
                 break;
             case right:
                 jewelFlick.setPosition(RIGHT_POSITION_FLICK);
                 telemetry.addData("Position:", jewelFlick.getPosition());
+                telemetry.addLine("Right");
+
                 telemetry.update();
                 break;
         }
     }
-    public void turn(float target, turnside direction, double speed, axis rotation_Axis) {
+    public void turn(float target, turnside direction, double speed, axis rotation_Axis) throws InterruptedException{
         start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         end = start + ((direction == turnside.cw) ? target : -target);
         isnotstopped = true;
@@ -531,6 +572,7 @@ public class Central extends LinearOpMode{
             isnotstopped = false;
         }
     }
+
 
     public void newFlick(team side) throws InterruptedException{
         centerFlicker(10);
@@ -581,11 +623,11 @@ public class Central extends LinearOpMode{
         try{stopDrivetrain();}
         catch(java.lang.InterruptedException e){}
     }
-    public void turn(float target, turnside direction, double speed)
+    public void turn(float target, turnside direction, double speed) throws InterruptedException
     {
         turn(target,direction,speed,axis.center);
     }
-    public void turn(float target, turnside direction)
+    public void turn(float target, turnside direction)throws InterruptedException
     {
         turn(target,direction,10);
     }
@@ -598,7 +640,21 @@ public class Central extends LinearOpMode{
     //none right now
 
     //------------------GLYPH FUNCTIONS------------------------------------------------------------------------
-    //none right now
+    public void GlyphDown() throws InterruptedException{
+        pullServo.setPosition(LOW_POSITION_PULL);
+        powerMotors(-0.8, 2000, rightTread, leftTread);
+    }
+    public void GlyphDownONALL() throws InterruptedException{
+        pullServo.setPosition(LOW_POSITION_PULL);
+        rightTread.setPower(-0.8);
+        leftTread.setPower(-0.8);
+    }
+    public void GlyphOFF() throws InterruptedException{
+        pullServo.setPosition(0.8);
+        rightTread.setPower(0);
+        leftTread.setPower(0);
+        sleep(500);
+    }
 
     //------------------SERVO FUNCTIONS------------------------------------------------------------------------
     //none right now

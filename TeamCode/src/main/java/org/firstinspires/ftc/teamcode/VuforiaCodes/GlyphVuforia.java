@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.VuforiaCodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -12,12 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import org.firstinspires.ftc.teamcode.Central;
 
-
+@Autonomous(name="Glyph Vuforia Testing", group ="Test")
 public class GlyphVuforia extends Central {
 
+    public ElapsedTime runtime = new ElapsedTime();
     OpenGLMatrix lastLocation = null;
 
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException{
+        super.setRuntime(runtime);
+        CentralClass(setupType.drive);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -36,13 +40,13 @@ public class GlyphVuforia extends Central {
 
 
         glyphs.activate();  // would be at beginning of code,
+
+
+
         VectorF angles = anglesFromTarget(glyphBrown);
-
-
-
-
-        while(glyphBrown.getPose()!=null)
+        while( opModeIsActive())
         {
+
             VectorF trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
             telemetry.addData("Left/Right: ", trans.get(0));
             telemetry.addData("Up/Down: ", trans.get(1));
@@ -54,18 +58,24 @@ public class GlyphVuforia extends Central {
 
     }
 
-    public VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall) {
+    private VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall) {
         return new VectorF((float) (trans.get(0) - offWall.get(0) * Math.sin(Math.toRadians(robotAngle)) - offWall.get(2) * Math.cos(Math.toRadians(robotAngle))), trans.get(1), (float) (trans.get(2) + offWall.get(0) * Math.cos(Math.toRadians(robotAngle)) - offWall.get(2) * Math.sin(Math.toRadians(robotAngle))));
     }
 
-    public VectorF anglesFromTarget(VuforiaTrackableDefaultListener image) {
-        float[] data = image.getRawPose().getData();
-        float[][] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
+    private VectorF anglesFromTarget(VuforiaTrackableDefaultListener image) {
+        if(image.getRawPose() != null) {
+            float[] data = image.getRawPose().getData();
+            float[][] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
 
-        double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
-        double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
-        double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
-        return new VectorF((float) thetaX, (float) thetaY, (float) thetaZ);
+            double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
+            double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
+            double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
+            return new VectorF((float) thetaX, (float) thetaY, (float) thetaZ);
+        }
+        else{
+
+            return new VectorF(0,0,0);
+        }
     }
 
 

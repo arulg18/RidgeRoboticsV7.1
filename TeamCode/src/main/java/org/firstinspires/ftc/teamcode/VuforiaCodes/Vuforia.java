@@ -147,18 +147,12 @@ public class Vuforia extends Central {
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
 
-                if (RelicRecoveryVuMark.LEFT == vuMark) {    //Block should be placed in the left column
-                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.left);
-                } else if (RelicRecoveryVuMark.CENTER == vuMark) {  //Block should be placed in the center column
-                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.forward);
-                } else if (RelicRecoveryVuMark.RIGHT == vuMark) { //Block should be placed in the right columm
-                    driveTrainEncoderMovement(0.5, 5, 15, 2, movements.right);
-                } else {
-                    telemetry.addData("VuMark", "not visible");
-                }
-            } else {
+            }
+            else {
+                telemetry.addLine("Nothing");
                 //MAKE IT ROTATE TILL IT SEES THE IMAGE
-                }
+
+            }
                 telemetry.update();
             }
         }

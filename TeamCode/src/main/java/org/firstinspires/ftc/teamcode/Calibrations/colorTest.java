@@ -26,6 +26,8 @@ public class colorTest extends Central {
             telemetry.addData("Red: ", jewelSensor.red());
             telemetry.addData("Blue: ", jewelSensor.blue());
             telemetry.addData("Green: ", jewelSensor.green());
+            telemetry.addData("Alpha", jewelSensor.alpha());
+            telemetry.addData("ARGB", jewelSensor.argb());
             telemetry.update();
 
 
