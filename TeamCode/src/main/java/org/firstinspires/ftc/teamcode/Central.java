@@ -67,6 +67,15 @@ public class Central extends LinearOpMode{
                 public static final int OneY = 120;
                 public static final int TwoY = 24;
 
+                public static final int Cryptobox2Y = 24;
+                public static final int Cryptobox1Y = 48;
+                public static final int CryptoboxRedX = 36;
+                public static final int CryptoboxBlueX = 120;
+
+                public static final int CrypotboxOffset=6;
+
+                public static int AngleOffset = 90;
+
 
     //--------------------------SERVO CONFIGURATIONS-----------------
 
@@ -632,12 +641,15 @@ public class Central extends LinearOpMode{
     {
         turn(target,direction,speed,axis.center);
     }
-    public void absturn(float target, turnside direction, double speed)
+    public void absturn(float target, turnside direction, double speed) throws InterruptedException
     {
         float turnval=imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - (target+initorient);
 
         try {turn(Math.abs(turnval),(turnval<0)?turnside.ccw:turnside.cw);}
-        catch(java.lang.InterruptedException e){}
+        catch(java.lang.InterruptedException e){
+            try{stopDrivetrain();}
+            catch(java.lang.InterruptedException i){}
+        }
     }
     public void turn(float target, turnside direction)throws InterruptedException
     {
@@ -845,15 +857,19 @@ public class Central extends LinearOpMode{
         switch (side) { //initialize the position with correct coordinates
             case red1:
                 startpos = new Position(DistanceUnit.INCH, RedX, OneY, 0, 0);
+                AngleOffset = 90;
                 break;
             case red2:
                 startpos = new Position(DistanceUnit.INCH, RedX, TwoY, 0, 0);
+                AngleOffset = 90;
                 break;
             case blue1:
                 startpos = new Position(DistanceUnit.INCH, BlueX, OneY, 0, 0);
+                AngleOffset = -90;
                 break;
             case blue2:
                 startpos = new Position(DistanceUnit.INCH, BlueX, TwoY, 0, 0);
+                AngleOffset = -90;
                 break;
             default:// never happens, but needed to compile
                 startpos = new Position();
