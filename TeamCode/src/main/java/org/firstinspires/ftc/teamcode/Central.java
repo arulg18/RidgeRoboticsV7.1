@@ -745,6 +745,44 @@ public class Central extends LinearOpMode{
             catch(java.lang.InterruptedException i){}
         }
     }
+
+    public void balancer()
+    {
+        xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+        ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        double angleoff = Math.pow((Math.sin(Math.toRadians((double)xtilt))),2)+ Math.pow(Math.sin(Math.toRadians((double)(ytilt))),2);
+        if(angleoff>Math.sin(Math.toRadians(sensitivity))){
+            if((xtilt>0&&ytilt>0&&ytilt<xtilt)||(xtilt>0&&ytilt<0&&xtilt>-ytilt))//right
+            {
+                movetry(movements.left);
+            }
+            else if((xtilt>0&&ytilt>0&&xtilt<ytilt)||(xtilt<0&&ytilt>0&&-xtilt<ytilt))//forwards
+            {
+                movetry(movements.backward);
+            }
+            else if((xtilt<0&&ytilt>0&&-xtilt>ytilt)||(xtilt<0&&ytilt<0&&-xtilt>-ytilt))//left
+            {
+                movetry(movements.right);
+            }
+            else if((xtilt<0&&ytilt<0&&-xtilt>-ytilt)||(xtilt>0&&ytilt<0&&xtilt<-ytilt))//back
+            {
+                movetry(movements.forward);
+            }
+            try{tipcorrect();}
+            catch(java.lang.InterruptedException e){
+                try{
+                    stopDrivetrain();
+                }
+                catch(java.lang.InterruptedException i){}
+            }
+        }
+        else {
+            try{
+                stopDrivetrain();
+            }
+            catch(java.lang.InterruptedException i){}
+        }
+    }
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException{
         runtime = time;
