@@ -78,30 +78,30 @@ public class Red1Sample extends Central {
             switch(position){
                 case 0:         //Left
                     //driveTrainEncoderMovement(0.5, 44, 10, 100, movements.backward);
-
+                    MovetoPos(CryptoboxRedX,Cryptobox1Y-CrypotboxOffset);
                     break;
                 case 1:         //Center
                     //driveTrainEncoderMovement(0.5, 46-9.1, 10, 100, movements.backward);
-
-
+                    MovetoPos(CryptoboxRedX,Cryptobox1Y);
                     break;
                 case 2:         //Right
                     //driveTrainEncoderMovement(0.5, 46-8.1-8.6, 10, 100, movements.backward);
-
+                    MovetoPos(CryptoboxRedX,Cryptobox1Y+CrypotboxOffset);
                     break;
 
             }
-
-            driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.ccw);
-            driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
-            driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);
+            absturn(180,turnside.ccw,2);
+            //driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.ccw);
+            //driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
+            //driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);
 
 
             GlyphDown();
 
             pullServo.setPosition(0.8);
 
-            driveTrainEncoderMovement(0.7, 6, 10, 100, movements.backward);
+            MovetoPos(CryptoboxRedX+6,Cryptobox1Y);
+            //driveTrainEncoderMovement(0.7, 6, 10, 100, movements.backward);
 
             break;
         }

@@ -685,17 +685,31 @@ public class Central extends LinearOpMode {
         turn(target, direction, speed, axis.center);
     }
 
-    public void absturn(float target, turnside direction, double speed) throws InterruptedException {
-        float turnval = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - (target + initorient);
-
+    public void absturn(float target, turnside direction, double speed,axis rotation_Axis) throws InterruptedException { //very similar to turn(target, direction, speed, rotation_Axis), fix if messy
+        float turnval = (target + initorient+180)%360-180;
+        isnotstopped = true;
         try {
-            turn(Math.abs(turnval), (turnval < 0) ? turnside.ccw : turnside.cw);
-        } catch (java.lang.InterruptedException e) {
-            try {
-                stopDrivetrain();
-            } catch (java.lang.InterruptedException i) {
+            switch (rotation_Axis) {
+                case center:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cw : movements.ccw);
+                    break;
+                case back:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwback : movements.ccwback);
+                    break;
+                case front:
+                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwfront : movements.ccwfront);
+                    break;
             }
+        } catch (java.lang.InterruptedException e) {
+            isnotstopped = false;
         }
+        while (!((turnval <= current.firstAngle + 1) && turnval > current.firstAngle - 1) && opModeIsActive() && isnotstopped) {
+            current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+        try {
+            stopDrivetrain();
+        }
+        catch (java.lang.InterruptedException e){}
     }
 
     public void turn(float target, turnside direction) throws InterruptedException {
@@ -749,7 +763,7 @@ public class Central extends LinearOpMode {
         return true;
     }
 
-    public void balancer() {
+    public void balancer() { // very similar to tipcorrect(), fix if messy
         xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
         ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
         double angleoff = Math.pow((Math.sin(Math.toRadians((double) xtilt))), 2) + Math.pow(Math.sin(Math.toRadians((double) (ytilt))), 2);
