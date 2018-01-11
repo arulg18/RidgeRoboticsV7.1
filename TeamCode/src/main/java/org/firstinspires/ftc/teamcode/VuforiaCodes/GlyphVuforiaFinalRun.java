@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.VuforiaCodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import android.support.annotation.NonNull;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 import org.firstinspires.ftc.teamcode.Central;
 
 
-public class GlyphVuforia extends Central {
+public class GlyphVuforiaFinalRun extends Central {
 
     OpenGLMatrix lastLocation = null;
 
@@ -39,25 +37,43 @@ public class GlyphVuforia extends Central {
         VectorF angles = anglesFromTarget(glyphBrown);
 
 
+        VectorF trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
 
+        while (trans.get(0) > 0) {
+            turn(90, turnside.ccw, 0.5);
+            trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
+        }
 
-        while(glyphBrown.getPose()!=null)
-        {
-            VectorF trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
-            telemetry.addData("Left/Right: ", trans.get(0));
-            telemetry.addData("Up/Down: ", trans.get(1));
-            telemetry.addData("Front/Back: ", trans.get(2));
-            sleep(2000);
-            telemetry.update();
+        int initialPosition = motorFR.getCurrentPosition();
+        while (trans.get(2) > 3) {
+            motorBL.setPower(0.2);
+            motorBR.setPower(0.2);
+            motorFL.setPower(0.2);
+            motorFR.setPower(0.2);
+            trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
 
         }
 
-    }
 
+
+        double distanceTravelled = (motorFR.getCurrentPosition() - initialPosition)/ COUNTS_PER_INCH;
+        while (trans.get(0) > 0) {
+            trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
+            turn(90, turnside.ccw, 0.5);
+
+        }
+
+        powerMotors(0.2, 5000, rightTread, leftTread);
+
+
+
+    }
+    @NonNull
     private VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall) {
         return new VectorF((float) (trans.get(0) - offWall.get(0) * Math.sin(Math.toRadians(robotAngle)) - offWall.get(2) * Math.cos(Math.toRadians(robotAngle))), trans.get(1), (float) (trans.get(2) + offWall.get(0) * Math.cos(Math.toRadians(robotAngle)) - offWall.get(2) * Math.sin(Math.toRadians(robotAngle))));
     }
 
+    @NonNull
     private VectorF anglesFromTarget(VuforiaTrackableDefaultListener image) {
         float[] data = image.getRawPose().getData();
         float[][] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
