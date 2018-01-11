@@ -25,9 +25,10 @@ public class Test_Jewel extends Central {
         while (opModeIsActive()) {
             flick(team.red1);
             telemetry.addLine("Running as Red 1");
+            telemetry.update();
             flick(team.blue1);
-            telemetry.addLine("Running as Red 1");
-
+            telemetry.addLine("Running as Blue 1");
+            telemetry.update();
             break;
 
         }

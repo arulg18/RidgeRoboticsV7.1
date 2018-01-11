@@ -19,7 +19,7 @@ public class RotationTest extends Central {
     public void runOpMode() throws InterruptedException {
         super.setRuntime(runtime);
         waitForStart();
-        setupIMU();
+        setupIMU(team.red1);
         setupDrivetrain();
         turn(90, turnside.cw, 1);
         telemetry.addLine("90 degrees, Speed 1, clockwise, center axis");
