@@ -13,22 +13,29 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import org.firstinspires.ftc.teamcode.Central;
 
-@Autonomous(name="Glyph Vuforia Testing", group ="Test")
-public class GlyphVuforia extends Central {
+@Autonomous(name="Glyph Vuforia Testing 2", group ="Test")
+public class VuforiaGlyph extends Central {
 
-    public ElapsedTime runtime = new ElapsedTime();
+
     OpenGLMatrix lastLocation = null;
+    public ElapsedTime runtime = new ElapsedTime();
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    VuforiaLocalizer vuforia;
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
         CentralClass(setupType.drive);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         params.vuforiaLicenseKey = "AeHK+j//////AAAAGV9JzI/9h0DLhZ7c7w4sN30lJRIpNPRyXVHdsqCX+XHpMysSwND71QWYT9YFkwVxopMQaXnzmfWK7Sc2cSJJLPU9r2G/ioxim4UU4c4rPyvhtkOcZkaS6hAPo+aKdQVUsVkBsBbPIRcQOAEmp7oKqV0d/8pydpXHCAUA18eNjdoEufCSugolPo84nHnEcEiklpqljewrCObyMTTwoftkpCEabzJoHZ5s15Ztja9s9afEXBA5Vhp2OEcdxWQVoTHL5eFJog3faeMBSyiU/NKjRNHv04w+P8lMnClXXLI8BiFVof8X5MDQPv8vFRHEADe8lCpnYDh1EGM0ZkFJv+gc59k4Ky1bIdUZYNvEto3Y5WRK\n";
         params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
-        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
+        this.vuforia = ClassFactory.createVuforiaLocalizer(params);
 
         // Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1); //how many targets viewed at a time
 
@@ -37,23 +44,29 @@ public class GlyphVuforia extends Central {
         glyphs.get(0).setName("glyphBrown");
 
         VuforiaTrackableDefaultListener glyphBrown = (VuforiaTrackableDefaultListener) glyphs.get(0).getListener();
-
+        waitForStart();
 
         glyphs.activate();  // would be at beginning of code,
 
+        VectorF trans;
+        VectorF angles;
 
 
-        VectorF angles = anglesFromTarget(glyphBrown);
         while(opModeIsActive())
         {
-
-            VectorF trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
-            telemetry.addData("Left/Right: ", trans.get(0));
-            telemetry.addData("Up/Down: ", trans.get(1));
-            telemetry.addData("Front/Back: ", trans.get(2));
-            sleep(2000);
-            telemetry.update();
-
+            if (glyphBrown.getPose() != null) {
+                angles = anglesFromTarget(glyphBrown);
+                trans = navOffWall(glyphBrown.getPose().getTranslation(), Math.toDegrees(angles.get(0)) - 90, new VectorF(500, 0, 0));
+                telemetry.addData("Left/Right: ", trans.get(0));
+                telemetry.addData("Up/Down: ", trans.get(1));
+                telemetry.addData("Front/Back: ", trans.get(2));
+                sleep(2000);
+                telemetry.update();
+            }
+            else {
+                telemetry.addLine("NOTHING");
+                telemetry.update();
+            }
         }
 
     }
@@ -63,20 +76,15 @@ public class GlyphVuforia extends Central {
     }
 
     private VectorF anglesFromTarget(VuforiaTrackableDefaultListener image) {
-        if(image.getRawPose() != null) {
-            float[] data = image.getRawPose().getData();
-            float[][] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
+        while (image.getRawPose() == null){}
+        float[] data = image.getRawPose().getData();
+        float[][] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
 
-            double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
-            double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
-            double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
-            return new VectorF((float) thetaX, (float) thetaY, (float) thetaZ);
-        }
-        else{
+        double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
+        double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
+        double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
+        return new VectorF((float) thetaX, (float) thetaY, (float) thetaZ);
 
-            return new VectorF(0,0,0);
-        }
     }
-
 
 }
