@@ -823,6 +823,10 @@ public class Central extends LinearOpMode {
         leftTread.setPower(0);
         sleep(500);
     }
+    public void GlyphUp() throws InterruptedException {
+        pullServo.setPosition(HIGH_POSITION_PULL);
+        powerMotors(0.8, 2000, rightTread, leftTread);
+    }
 
     //------------------SERVO FUNCTIONS------------------------------------------------------------------------
     //none right now
@@ -1022,5 +1026,15 @@ public class Central extends LinearOpMode {
         }
     }
 
+public double getCurrentYPosition() {
 
+return 0.0;
+    }
+
+    public double getCurrentXPosition() {
+
+return 0.0;
+    }
 }
+
+
