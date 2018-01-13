@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
 import com.sun.tools.javac.tree.DCTree;
 
@@ -38,7 +38,7 @@ public class Central extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //--------------------------CONSTANTS----------------------------
-
+    public static team thisteam;
     //--------------------------ENCODERS---------------------
     public static final double COUNTS_PER_MOTOR_NEVEREST = 1680;
     public static final double COUNTS_PER_MOTOR_TETRIX = 1440;
@@ -221,11 +221,15 @@ public class Central extends LinearOpMode {
         front, center, back;
     }
 
+    public enum cryptoboxSide {
+        left, center, right;
+    }
+
     //------------------------CONFIGURATIONS----------------------
     // Sensor
-    BNO055IMU imu;
+    BNO055IMUImpl imu;
     NaiveAccelerationIntegrator integrator;
-    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
     Orientation current;
     float initorient;
     float start;
@@ -328,6 +332,7 @@ public class Central extends LinearOpMode {
     }
 
     public void CentralClass(setupType setup, team player) throws InterruptedException {
+        thisteam = player;
         switch (setup) {
             case all:
                 setupDrivetrain();
@@ -637,7 +642,6 @@ public class Central extends LinearOpMode {
 
     }
 
-
     public void newFlick(team side) throws InterruptedException {
         centerFlicker(10);
 
@@ -681,12 +685,14 @@ public class Central extends LinearOpMode {
         centerFlicker(0);
     }
 
+    //--------------------MOVEMENT FUNCTIONS-------------------------------------
+
     public void turn(float target, turnside direction, double speed) throws InterruptedException {
         turn(target, direction, speed, axis.center);
     }
 
-    public void absturn(float target, turnside direction, double speed,axis rotation_Axis) throws InterruptedException { //very similar to turn(target, direction, speed, rotation_Axis), fix if messy
-        float turnval = (target + initorient+180)%360-180;
+    public void absturn(float target, turnside direction, double speed, axis rotation_Axis) throws InterruptedException { //very similar to turn(target, direction, speed, rotation_Axis), fix if messy
+        float turnval = (target + initorient + 180) % 360 - 180;
         isnotstopped = true;
         try {
             switch (rotation_Axis) {
@@ -708,8 +714,8 @@ public class Central extends LinearOpMode {
         }
         try {
             stopDrivetrain();
+        } catch (java.lang.InterruptedException e) {
         }
-        catch (java.lang.InterruptedException e){}
     }
 
     public void turn(float target, turnside direction) throws InterruptedException {
@@ -797,6 +803,83 @@ public class Central extends LinearOpMode {
         }
     }
 
+    public void MovetoPos(double xtarget, double ytarget) throws InterruptedException {
+        double x;
+        double y;
+        Position currentPos;
+        boolean escape = false;
+
+        currentPos = imu.getPosition();
+        x = xtarget - currentPos.x;
+        y = ytarget - currentPos.y;
+        if ((x > 0 && y > 0 && y < x) || (x > 0 && y < 0 && x > -y))//right
+        {
+            escape = movetry(movements.right);
+        } else if ((x > 0 && y > 0 && x < y) || (x < 0 && y > 0 && -x < y))//forwards
+        {
+            escape = movetry(movements.forward);
+        } else if ((x < 0 && y > 0 && -x > y) || (x < 0 && y < 0 && -x > -y))//left
+        {
+            escape = movetry(movements.left);
+        } else if ((x < 0 && y < 0 && -x > -y) || (x > 0 && y < 0 && x < -y))//back
+        {
+            escape = movetry(movements.backward);
+        }
+        if (!escape) {
+            try {
+                stopDrivetrain();
+            } catch (java.lang.InterruptedException e) {
+            }
+            return;
+        } //if the function stops midway, quit
+
+        if (-2 < x && x < 2 && -2 < y && y < 2) {
+            try {
+                stopDrivetrain();
+            } catch (java.lang.InterruptedException e) {
+            }
+            return;
+        }
+        MovetoPos(x, y); //recursion
+    }
+
+    public void move(double xtarget, double ytarget) throws InterruptedException {
+        Position currentPos = integrator.getPosition();
+        double x = Math.abs(xtarget - currentPos.x);
+        double y = Math.abs(xtarget - currentPos.y);
+        boolean escape = false;
+
+        while ((x < 1) || (y < 1)) {
+            x = Math.abs(xtarget - currentPos.x);
+            y = Math.abs(xtarget - currentPos.y);
+            currentPos = imu.getPosition();
+            if ((x > 0 && y > 0 && y < x) || (x > 0 && y < 0 && x > -y))//right
+            {
+                escape = movetry(movements.right);
+            } else if ((x > 0 && y > 0 && x < y) || (x < 0 && y > 0 && -x < y))//forwards
+            {
+                escape = movetry(movements.forward);
+            } else if ((x < 0 && y > 0 && -x > y) || (x < 0 && y < 0 && -x > -y))//left
+            {
+                escape = movetry(movements.left);
+            } else if ((x < 0 && y < 0 && -x > -y) || (x > 0 && y < 0 && x < -y))//back
+            {
+                escape = movetry(movements.backward);
+            }
+            if (!escape) {
+                try {
+                    stopDrivetrain();
+                } catch (java.lang.InterruptedException e) {
+                }
+            } //if the function stops midway, quit
+        }
+        try {
+            stopDrivetrain();
+        } catch (java.lang.InterruptedException e) {
+        }
+    }
+
+
     //------------------SET FUNCTIONS------------------------------------------------------------------------
     public void setRuntime(ElapsedTime time) throws InterruptedException {
         runtime = time;
@@ -824,6 +907,51 @@ public class Central extends LinearOpMode {
         sleep(500);
     }
 
+    public void GlyphDrop(cryptoboxSide side) {
+        boolean isnotstoped = true;
+        switch (thisteam) {
+            case blue1:
+                try {
+                    MovetoPos(CryptoboxBlueX, Cryptobox1Y);
+                } catch (java.lang.InterruptedException e) {
+                    isnotstoped = false;
+                }
+                break;
+            case blue2:
+                try {
+                    MovetoPos(CryptoboxBlueX, Cryptobox2Y);
+                } catch (java.lang.InterruptedException e) {
+                    isnotstoped = false;
+                }
+                break;
+            case red1:
+                try {
+                    MovetoPos(CryptoboxRedX, Cryptobox1Y);
+                } catch (java.lang.InterruptedException e) {
+                    isnotstoped = false;
+                }
+                break;
+            case red2:
+                try {
+                    MovetoPos(CryptoboxRedX, Cryptobox2Y);
+                } catch (java.lang.InterruptedException e) {
+                    isnotstoped = false;
+                }
+                break;
+        }
+        if (isnotstopped) {
+            switch (side) {
+                case left:
+
+                    break;
+                case right:
+                    break;
+                case center:
+                    break;
+            }
+        }
+    }
+
     //------------------SERVO FUNCTIONS------------------------------------------------------------------------
     //none right now
 
@@ -833,43 +961,6 @@ public class Central extends LinearOpMode {
         motor.setDirection(DcMotor.Direction.FORWARD);
         motor.setPower(0);
         return motor;
-    }
-
-    public void MovetoPos(double xtarget, double ytarget) throws InterruptedException {
-        double x;
-        double y;
-        Position currentPos;
-        boolean escape =false;
-
-        currentPos = integrator.getPosition();
-        x = xtarget - currentPos.x;
-        y = ytarget - currentPos.y;
-        if ((x > 0 && y > 0 && y < x) || (x > 0 && y < 0 && x > -y))//right
-        {
-            escape = movetry(movements.right);
-        } else if ((x > 0 && y > 0 && x < y) || (x < 0 && y > 0 && -x < y))//forwards
-        {
-            escape = movetry(movements.forward);
-        } else if ((x < 0 && y > 0 && -x > y) || (x < 0 && y < 0 && -x > -y))//left
-        {
-            escape = movetry(movements.left);
-        } else if ((x < 0 && y < 0 && -x > -y) || (x > 0 && y < 0 && x < -y))//back
-        {
-            escape = movetry(movements.backward);
-        }
-        if (!escape)
-        {return;} //if the function stops midway, quit
-
-        if (-2 < x && x < 2 && -2 < y && y < 2) {
-            return;
-        }
-        integrator.update(imu.getAcceleration());
-        MovetoPos(x, y); //recursion
-
-        try {
-            stopDrivetrain();
-        } catch (java.lang.InterruptedException e) {
-        }
     }
 
     public void motorDriveMode(EncoderMode mode, DcMotor... motor) throws InterruptedException {
@@ -960,12 +1051,12 @@ public class Central extends LinearOpMode {
     }
 
     public void setupIMU(team side) throws InterruptedException {
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMUImpl.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMUImpl.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled = true; //copypasted from BNO055IMU sample code, no clue what this does
         parameters.loggingTag = "IMU"; //copypasted from BNO055IMU sample code, no clue what this does
-        imu = hardwareMap.get(BNO055IMU.class, imuRedS);
+        imu = hardwareMap.get(BNO055IMUImpl.class, imuRedS);
         imu.initialize(parameters);
         Position startpos;
         switch (side) { //initialize the position with correct coordinates
@@ -989,7 +1080,8 @@ public class Central extends LinearOpMode {
                 startpos = new Position();
                 break;
         }
-        //origin is @ bottom left
+        //origin is @ bottom left when looking at the board with red1 @ top left corner
+        // 0 degrees is @ east when looking at the board with red1 @ top left corner
         Velocity veloInit = new Velocity(DistanceUnit.INCH, 0, 0, 0, 0);
         integrator.initialize(parameters, startpos, veloInit);
         initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
