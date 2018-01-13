@@ -193,16 +193,16 @@ public class Central extends LinearOpMode {
     public enum treadPivotPositions {
         lift,
         drop,
-        center;
+        center
 
     }
 
     public enum setupType {
-        all, glyph, jewel, relic, drive, teleop;
+        all, glyph, jewel, relic, drive, teleop
     }
 
     public enum team {
-        red1, red2, blue1, blue2;
+        red1, red2, blue1, blue2
     }
 
     public enum flick {
@@ -210,19 +210,19 @@ public class Central extends LinearOpMode {
     }
 
     public enum EncoderMode {
-        ON, OFF;
+        ON, OFF
     }
 
     public enum turnside {
-        ccw, cw;
+        ccw, cw
     }
 
     public enum axis {
-        front, center, back;
+        front, center, back
     }
 
     public enum cryptoboxSide {
-        left, center, right;
+        left, center, right
     }
 
     //------------------------CONFIGURATIONS----------------------
@@ -914,42 +914,71 @@ public class Central extends LinearOpMode {
                 try {
                     MovetoPos(CryptoboxBlueX, Cryptobox1Y);
                 } catch (java.lang.InterruptedException e) {
-                    isnotstoped = false;
+                    return;
+                }
+                try {
+                    absturn(0,turnside.cw,2,axis.center);
+                } catch (java.lang.InterruptedException e) {
+                    return;
                 }
                 break;
             case blue2:
                 try {
                     MovetoPos(CryptoboxBlueX, Cryptobox2Y);
                 } catch (java.lang.InterruptedException e) {
-                    isnotstoped = false;
+                    return;
+                }
+                try {
+                    absturn(-90,turnside.cw,2,axis.center);
+                } catch (java.lang.InterruptedException e) {
+                    return;
                 }
                 break;
             case red1:
                 try {
                     MovetoPos(CryptoboxRedX, Cryptobox1Y);
                 } catch (java.lang.InterruptedException e) {
-                    isnotstoped = false;
+                    return;
+                }
+                try {
+                    absturn(180,turnside.cw,2,axis.center);
+                } catch (java.lang.InterruptedException e) {
+                    return;
                 }
                 break;
             case red2:
                 try {
                     MovetoPos(CryptoboxRedX, Cryptobox2Y);
                 } catch (java.lang.InterruptedException e) {
-                    isnotstoped = false;
+                    return;
+                }
+                try {
+                    absturn(-90,turnside.cw,2,axis.center);
+                } catch (java.lang.InterruptedException e) {
+                    return;
                 }
                 break;
         }
-        if (isnotstopped) {
+
             switch (side) {
                 case left:
-
+                    try {
+                        move(-6, 0);
+                    }
+                    catch(java.lang.InterruptedException e)
+                    {return;}
                     break;
                 case right:
+                    try {
+                        move(6, 0);
+                    }
+                    catch(java.lang.InterruptedException e)
+                    {return;}
                     break;
                 case center:
                     break;
             }
-        }
+
     }
 
     //------------------SERVO FUNCTIONS------------------------------------------------------------------------
