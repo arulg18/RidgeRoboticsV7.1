@@ -1112,7 +1112,7 @@ public class Central extends LinearOpMode {
         //origin is @ bottom left when looking at the board with red1 @ top left corner
         // 0 degrees is @ east when looking at the board with red1 @ top left corner
         Velocity veloInit = new Velocity(DistanceUnit.INCH, 0, 0, 0, 0);
-        integrator.initialize(parameters, startpos, veloInit);
+        imu.startAccelerationIntegration(startpos,veloInit,5);
         initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
