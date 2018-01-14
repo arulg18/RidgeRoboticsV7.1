@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
-import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
 import com.sun.tools.javac.tree.DCTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -228,7 +227,6 @@ public class Central extends LinearOpMode {
     //------------------------CONFIGURATIONS----------------------
     // Sensor
     BNO055IMUImpl imu;
-    NaiveAccelerationIntegrator integrator;
     BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
     Orientation current;
     float initorient;
@@ -844,7 +842,7 @@ public class Central extends LinearOpMode {
     }
 
     public void move(double xtarget, double ytarget) throws InterruptedException {
-        Position currentPos = integrator.getPosition();
+        Position currentPos = imu.getPosition();
         double x = Math.abs(xtarget - currentPos.x);
         double y = Math.abs(xtarget - currentPos.y);
         boolean escape = false;
