@@ -15,7 +15,11 @@ public class RotationTest extends Central {
 
     public ElapsedTime runtime = new ElapsedTime();
 
+
+
     public void runOpMode() throws InterruptedException {
+        CentralClass(setupType.all);
+
         super.setRuntime(runtime);
         waitForStart();
         turn(90, turnside.cw, 1);

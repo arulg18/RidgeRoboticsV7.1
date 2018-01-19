@@ -103,6 +103,8 @@ public class Autonomous_Blue1 extends Central {
 
             break;
         }
+        initialPositionFlicker(0);
+
     }
 
 }
