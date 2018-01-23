@@ -72,16 +72,16 @@ public class Autonomous_Red2 extends Central {
             driveTrainEncoderMovement(0.7, 30, 10, 100, movements.backward);
             switch(position){
                 case 0:         //Left
-                    driveTrainEncoderMovement(0.7, 14, 10, 100, movements.right);
+                    driveTrainEncoderMovement(0.7, 16, 10, 100, movements.left);
 
                     break;
                 case 1:         //Center
-                    driveTrainEncoderMovement(0.7, 10, 10, 100, movements.right);
+                    driveTrainEncoderMovement(0.7, 12, 10, 100, movements.left);
 
 
                     break;
                 case 2:         //Right
-                    driveTrainEncoderMovement(0.7, 6, 10, 100, movements.right);
+                    driveTrainEncoderMovement(0.7, 8, 10, 100, movements.left);
 
                     break;
 
@@ -94,6 +94,8 @@ public class Autonomous_Red2 extends Central {
 
             break;
         }
+        initialPositionFlicker(0);
+
     }
 
 }

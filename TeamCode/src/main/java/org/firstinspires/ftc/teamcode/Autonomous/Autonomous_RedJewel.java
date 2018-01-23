@@ -14,21 +14,21 @@ import org.firstinspires.ftc.teamcode.Central;
 /**
  * Created by arulgupta on 12/14/17.
  */
-@Autonomous(name = "Blue 2", group = "Autonomous")
+@Autonomous(name = "Red NOt jewel 1", group = "Autonomous")
 
-public class Autonomous_Blue2 extends Central {
+public class Autonomous_RedJewel extends Central {
 
-    team side = team.blue2;
+    team side = team.red1;
     public static final String TAG = "Vuforia VuMark Sample";
     public ElapsedTime runtime = new ElapsedTime();
-    public static int position = 2;
+    public static int position = 0;
 
 
     VuforiaLocalizer vuforia;
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
 
-        CentralClass(setupType.all);
+        CentralClass(setupType.notjewel);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -49,8 +49,7 @@ public class Autonomous_Blue2 extends Central {
         relicTrackables.activate();
 
         while (opModeIsActive()) {
-
-            flick(side);
+            //flick(side);
             sweepServo(pullServo, LOW_POSITION_PULL, 0.04, 30);
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -67,39 +66,40 @@ public class Autonomous_Blue2 extends Central {
                     telemetry.addData("VuMark", "not visible");
                 }
             }
+
             telemetry.update();
 
-            driveTrainEncoderMovement(0.7, 27, 10, 100, movements.forward);
             switch(position){
                 case 0:         //Left
-                    driveTrainEncoderMovement(0.5, 10, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.5, 44, 10, 100, movements.backward);
 
                     break;
                 case 1:         //Center
-                    driveTrainEncoderMovement(0.5, 20, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.5, 46-9.1, 10, 100, movements.backward);
 
 
                     break;
                 case 2:         //Right
-                    driveTrainEncoderMovement(0.7, 30, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.5, 46-8.1-8.6, 10, 100, movements.backward);
 
                     break;
 
             }
+
+            driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.ccw);
+            driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
             driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);
 
-            GlyphDownONALL();
-            sleep(2000);
-            GlyphOFF();
 
+            GlyphDown();
 
-            driveTrainEncoderMovement(0.7, 8, 10, 100, movements.backward);
+            pullServo.setPosition(0.8);
 
-
+            driveTrainEncoderMovement(0.7, 6, 10, 100, movements.backward);
 
             break;
         }
-        initialPositionFlicker(0);
+        //initialPositionFlicker(0);
 
     }
 

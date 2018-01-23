@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.sun.tools.javac.tree.DCTree;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -73,7 +75,15 @@ public class Central extends LinearOpMode {
     public static final int CryptoboxRedX = 36;
     public static final int CryptoboxBlueX = 120;
 
+<<<<<<< HEAD
     public static final int CrypotboxOffset = 6;
+=======
+    //--------------------------TELE-OP VALUES-------------------------
+                public static final double ROTATION_SPEED = 1;
+                public static final double DEAD_ZONE_SIZE = 0.1;
+                public static final double D_PAD_SPEED = 0.4;
+                public static final double CRAWL_SPEED = 0.2;
+>>>>>>> current
 
     public static int AngleOffset = 90;
 
@@ -82,17 +92,29 @@ public class Central extends LinearOpMode {
 
     //--------------Jewel System------------------
 
+<<<<<<< HEAD
     //  Minimum Positions
     public static final double MIN_POSITION_DOWN = 0;
     public static final double MIN_POSITION_FLICK = 0;
+=======
+                //  Initial Positions
+                public static final double START_POSITION_DOWN = 0.63;
+                public static final double START_POSITION_FLICK = 0.5-0.11;
+>>>>>>> current
 
     //  Maximum Positions
     public static final double MAX_POSITION_DOWN = 1;
     public static final double MAX_POSITION_FLICK = 1;
 
+<<<<<<< HEAD
     //  Initial Positions
     public static final double START_POSITION_DOWN = 0.63;
     public static final double START_POSITION_FLICK = 0.35;
+=======
+                    //  Centered Positions
+                    public static final double CENTER_POSITION_DOWN = 0.5;
+                    public static final double CENTER_POSITION_FLICK = 0.5;
+>>>>>>> current
 
     //  Significant Positions
 
@@ -204,9 +226,18 @@ public class Central extends LinearOpMode {
         red1, red2, blue1, blue2
     }
 
+<<<<<<< HEAD
     public enum flick {
         right, left
     }
+=======
+            public enum setupType{
+                all, glyph, jewel, relic, drive, teleop, notjewel;
+            }
+            public enum team{
+                red1, red2, blue1, blue2;
+            }
+>>>>>>> current
 
     public enum EncoderMode {
         ON, OFF
@@ -226,6 +257,7 @@ public class Central extends LinearOpMode {
 
     //------------------------CONFIGURATIONS----------------------
     // Sensor
+<<<<<<< HEAD
     BNO055IMUImpl imu;
     BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
     Orientation current;
@@ -236,6 +268,14 @@ public class Central extends LinearOpMode {
     float ytilt;
     public static final double sensitivity = 10;
     public static boolean isnotstopped;
+=======
+        public BNO055IMU imu;
+        public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        Orientation current;
+        float start;
+        float end;
+        public static boolean isnotstopped;
+>>>>>>> current
 
     public static final String imuRedS = "imu";
 
@@ -256,6 +296,7 @@ public class Central extends LinearOpMode {
     public Servo jewelFlick;
     public ColorSensor jewelSensor;
 
+<<<<<<< HEAD
     public static final String jewelDownS = "jewelDown";
     public static final String jewelFlickS = "jewelFlick";
     public static final String jewelSensorS = "colorSensor";
@@ -266,6 +307,23 @@ public class Central extends LinearOpMode {
     public DcMotor leftTread;
     public TouchSensor glyphButtonPick;
     public TouchSensor glyphButtonDrop;
+=======
+        public static final String jewelDownS = "jewelDown";
+        public static final String jewelFlickS = "jewelFlick";
+        public static final String jewelSensorS = "colorSensor";
+    //    public static final String rangeSensorS1 = "rangeX";
+  //  public static final String rangeSensorS2 = "rangeY";
+// Range Systems
+
+  //  public SensorMRRangeSensor rangeX;
+  //  public SensorMRRangeSensor rangeY;
+      //  Glyph System
+        public Servo pullServo;
+        public DcMotor rightTread;
+        public DcMotor leftTread;
+        public TouchSensor glyphButtonPick;
+        public TouchSensor glyphButtonDrop;
+>>>>>>> current
 
 
     public static final String pullServoS = "pullServo"; // updated //Configured
@@ -336,16 +394,31 @@ public class Central extends LinearOpMode {
                 setupDrivetrain();
                 setupJewel();
                 setupGlyph();
+<<<<<<< HEAD
                 setupRelic();
                 setupIMU(player);
+=======
+                //setupRelic();
+                setupIMU();
+>>>>>>> current
                 break;
+            case notjewel:
+                setupDrivetrain();
+                setupGlyph();
+                //setupRelic();
+                setupIMU();
             case teleop:
                 setupDrivetrain();
                 setupJewel();
                 centerFlicker(0);
                 setupGlyph();
+<<<<<<< HEAD
                 setupRelic();
                 setupIMU(player);
+=======
+                //setupRelic();
+                setupIMU();
+>>>>>>> current
                 break;
             case drive:
                 setupDrivetrain();
@@ -502,11 +575,18 @@ public class Central extends LinearOpMode {
         jewelFlick.setPosition(START_POSITION_FLICK);
         sleep(200);
     }
+<<<<<<< HEAD
 
     public void sweepServo(Servo servo, double EndPosition, double increment, long incrementSpeed) throws InterruptedException {
         if (servo.getPosition() > EndPosition) {
             for (double p = servo.getPosition(); servo.getPosition() > EndPosition; p -= increment) {
                 if (!opModeIsActive()) {
+=======
+    protected void sweepServo(Servo servo, double EndPosition, double increment, long incrementSpeed) throws InterruptedException{
+        if (servo.getPosition() > EndPosition){
+            for (double p = servo.getPosition(); servo.getPosition() > EndPosition; p-= increment){
+                if (!opModeIsActive()){
+>>>>>>> current
                     break;
                 }
                 servo.setPosition(p);
@@ -537,9 +617,15 @@ public class Central extends LinearOpMode {
             telemetry.update();
         } else {
             jewelFlick.setPosition(jewelFlick.getPosition() - .01);
+<<<<<<< HEAD
             if (count < 5) {
                 Red();
+=======
+            if (count < 7){
+>>>>>>> current
                 count++;
+
+                Red();
             }
 
         }
@@ -558,9 +644,14 @@ public class Central extends LinearOpMode {
         } else {
             jewelFlick.setPosition(jewelFlick.getPosition() - .01);
 
+<<<<<<< HEAD
             if (count < 5) {
                 Blue();
+=======
+            if (count < 5){
+>>>>>>> current
                 count++;
+                Blue();
             }
         }
     }
@@ -615,21 +706,29 @@ public class Central extends LinearOpMode {
         start = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         end = start + ((direction == turnside.cw) ? target : -target);
         isnotstopped = true;
-        try {
-            switch (rotation_Axis) {
-                case center:
-                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cw : movements.ccw);
-                    break;
-                case back:
-                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwback : movements.ccwback);
-                    break;
-                case front:
-                    driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwfront : movements.ccwfront);
-                    break;
+        while (isnotstopped) {
+            try {
+                switch (rotation_Axis) {
+                    case center:
+                        driveTrainMovement(speed, (direction == turnside.cw) ? movements.cw : movements.ccw);
+                        break;
+                    case back:
+                        driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwback : movements.ccwback);
+                        break;
+                    case front:
+                        driveTrainMovement(speed, (direction == turnside.cw) ? movements.cwfront : movements.ccwfront);
+                        break;
+                }
+            } catch (java.lang.InterruptedException e) {
+                isnotstopped = false;
             }
-        } catch (java.lang.InterruptedException e) {
-            isnotstopped = false;
+            if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle >= end){
+                stopDrivetrain();
+
+            }
+
         }
+<<<<<<< HEAD
         while (!((end <= current.firstAngle + 1) && end > current.firstAngle - 1) && opModeIsActive() && isnotstopped) {
             current = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         }
@@ -637,6 +736,10 @@ public class Central extends LinearOpMode {
             stopDrivetrain();
         } catch (java.lang.InterruptedException e) {
         }
+=======
+
+    }
+>>>>>>> current
 
     }
 
@@ -753,6 +856,7 @@ public class Central extends LinearOpMode {
             }
         }
     }
+<<<<<<< HEAD
 
     public boolean movetry(movements direction) {
         try {
@@ -765,6 +869,11 @@ public class Central extends LinearOpMode {
             }
         }
         return true;
+=======
+    public void turn(float target, turnside direction)throws InterruptedException
+    {
+        turn(target,direction,1);
+>>>>>>> current
     }
 
     public void balancer() { // very similar to tipcorrect(), fix if messy
@@ -887,6 +996,7 @@ public class Central extends LinearOpMode {
     //none right now
 
     //------------------GLYPH FUNCTIONS------------------------------------------------------------------------
+<<<<<<< HEAD
     public void GlyphDown() throws InterruptedException {
         pullServo.setPosition(LOW_POSITION_PULL);
         powerMotors(-0.8, 2000, rightTread, leftTread);
@@ -894,6 +1004,17 @@ public class Central extends LinearOpMode {
 
     public void GlyphDownONALL() throws InterruptedException {
         pullServo.setPosition(LOW_POSITION_PULL);
+=======
+    public void GlyphDown() throws InterruptedException{
+        pullServo.setPosition(0.4);
+        sleep(500);
+        powerMotors(-0.8, 2000, rightTread, leftTread);
+    }
+    public void GlyphDownONALL() throws InterruptedException{
+        pullServo.setPosition(0.4);
+        sleep(500);
+
+>>>>>>> current
         rightTread.setPower(-0.8);
         leftTread.setPower(-0.8);
     }
@@ -1036,6 +1157,18 @@ public class Central extends LinearOpMode {
 
         return sensor;
     }
+    /*
+    public SensorMRRangeSensor rangeSensor(SensorMRRangeSensor sensor, HardwareMap hardwareMap, String name, boolean sensorOn) throws InterruptedException
+    {
+        sensor = hardwareMap.rangeSensor.get(name);
+       // rangeSensor.engage();
+
+       // telemetry.addData("Beacon Red Value: ", sensor.red());
+      //  telemetry.update();
+
+        return sensor;
+    }*/
+
 
     public void powerMotors(double speed, long time, DcMotor... motors) {
         for (DcMotor motor : motors) {
@@ -1114,6 +1247,13 @@ public class Central extends LinearOpMode {
         initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
+  /*  public void setupRangeSensor() throws InterruptedException{
+
+        rangeX = rangeSensor(rangeX, hardwareMap, rangeSensorS1, JEWEL_SENSOR_LED_ON);
+        rangeY = rangeSensor(rangeY, hardwareMap, rangeSensorS2, JEWEL_SENSOR_LED_ON);
+
+    }
+*/
     //------------------DRIVETRAIN TELEOP FUNCTIONS------------------------------------------------------------------------
     public void driveTrainMovement(double speed, Central.movements movement) throws InterruptedException {
         double[] signs = movement.getDirections();

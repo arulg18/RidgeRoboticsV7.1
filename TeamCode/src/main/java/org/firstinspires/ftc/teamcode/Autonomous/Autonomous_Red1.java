@@ -96,6 +96,7 @@ public class Autonomous_Red1 extends Central {
             driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);
 
 
+
             GlyphDown();
 
             pullServo.setPosition(0.8);
@@ -104,6 +105,8 @@ public class Autonomous_Red1 extends Central {
 
             break;
         }
+        initialPositionFlicker(0);
+
     }
 
 }
