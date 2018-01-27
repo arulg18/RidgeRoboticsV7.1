@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Central;
 /**
  * Created by arulgupta on 12/14/17.
  */
+
 @Autonomous(name = "Rotation Test", group = "Test")
 
 public class RotationTest extends Central {
@@ -22,6 +23,8 @@ public class RotationTest extends Central {
 
         super.setRuntime(runtime);
         waitForStart();
+        setupIMU(team.red1);
+        setupDrivetrain();
         turn(90, turnside.cw, 1);
         telemetry.addLine("90 degrees, Speed 1, clockwise, center axis");
         telemetry.update();

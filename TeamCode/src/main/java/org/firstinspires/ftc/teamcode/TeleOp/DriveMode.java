@@ -33,7 +33,7 @@ public class DriveMode extends Central {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        CentralClass(setupType.notjewel);
+        CentralClass(setupType.teleop);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -87,10 +87,10 @@ public class DriveMode extends Central {
                     driveTrainMovement(D_PAD_SPEED, movements.backward);
                     //BACKWARD
                 } else if (gamepad1.dpad_right) {
-                    driveTrainMovement(D_PAD_SPEED, movements.left);
+                    driveTrainMovement(D_PAD_SPEED, movements.right);
                     //RIGHT
                 } else if (gamepad1.dpad_left) {
-                    driveTrainMovement(D_PAD_SPEED, movements.right);
+                    driveTrainMovement(D_PAD_SPEED, movements.left);
                     //LEFT
                 } else if (Math.pow(xAxis1, 2) + Math.pow(yAxis1, 2) >= Math.pow(DEAD_ZONE_SIZE, 2) && !leftStickButtonPressed) { //MAIN DIRECTIONS
 
