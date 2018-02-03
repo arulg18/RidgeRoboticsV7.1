@@ -787,7 +787,7 @@ public class Central extends LinearOpMode {
 
     public boolean movetry(movements direction) {
         try {
-            driveTrainMovement(10, direction);
+            driveTrainMovement(1.0, direction);
         } catch (java.lang.InterruptedException e) {
             try {
                 stopDrivetrain();
@@ -799,7 +799,7 @@ public class Central extends LinearOpMode {
     }
 
 
-    public void balancer() { // very similar to tipcorrect(), fix if messy
+    public void balancer() throws InterruptedException { // very similar to tipcorrect(), fix if messy
         xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
         ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
         double angleoff = Math.pow((Math.sin(Math.toRadians((double) xtilt))), 2) + Math.pow(Math.sin(Math.toRadians((double) (ytilt))), 2);
@@ -807,18 +807,21 @@ public class Central extends LinearOpMode {
             if ((xtilt > 0 && ytilt > 0 && ytilt < xtilt) || (xtilt > 0 && ytilt < 0 && xtilt > -ytilt))//right
             {
                 movetry(movements.left);
-            } else if ((xtilt > 0 && ytilt > 0 && xtilt < ytilt) || (xtilt < 0 && ytilt > 0 && -xtilt < ytilt))//forwards
+
+            } else if (xtilt<ytilt&&)//forwards
             {
                 movetry(movements.backward);
+
             } else if ((xtilt < 0 && ytilt > 0 && -xtilt > ytilt) || (xtilt < 0 && ytilt < 0 && -xtilt > -ytilt))//left
             {
                 movetry(movements.right);
+
             } else if ((xtilt < 0 && ytilt < 0 && -xtilt > -ytilt) || (xtilt > 0 && ytilt < 0 && xtilt < -ytilt))//back
             {
                 movetry(movements.forward);
             }
             try {
-                tipcorrect();
+                balancer();
             } catch (java.lang.InterruptedException e) {
                 try {
                     stopDrivetrain();
@@ -826,10 +829,8 @@ public class Central extends LinearOpMode {
                 }
             }
         } else {
-            try {
-                stopDrivetrain();
-            } catch (java.lang.InterruptedException i) {
-            }
+            stopDrivetrain();
+
         }
     }
 
