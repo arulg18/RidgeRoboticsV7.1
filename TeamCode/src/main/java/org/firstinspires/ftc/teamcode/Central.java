@@ -234,14 +234,14 @@ public class Central extends LinearOpMode{
 //------------------------CONFIGURATIONS----------------------
     // Sensor
 
-        BNO055IMUImpl imu;
-        BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
-        Orientation current;
-        float initorient;
-        float start;
-        float end;
-        float xtilt;
-        float ytilt;
+        public BNO055IMUImpl imu;
+        public BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
+        public Orientation current;
+        public float initorient;
+        public float start;
+        public float end;
+        public float xtilt;
+        public float ytilt;
         public static final double sensitivity = 10;
         public static boolean isnotstopped;
 

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Central;
  * Created by arulgupta on 12/14/17.
  */
 @Autonomous(name = "IMU Test", group = "Test")
-public class Test_IMU extends Central {
+public class Test_IMUPosition extends Central {
 
     public ElapsedTime runtime = new ElapsedTime();
 
