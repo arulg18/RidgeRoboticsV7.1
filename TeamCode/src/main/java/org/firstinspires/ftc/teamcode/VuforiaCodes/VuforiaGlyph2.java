@@ -60,8 +60,8 @@ import org.firstinspires.ftc.teamcode.Central;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Vuforia Testing", group ="Test")
-public class Vuforia extends Central {
+@Autonomous(name="Vuforia2  Testing", group ="Test")
+public class VuforiaGlyph2 extends Central {
 
     public static final String TAG = "Vuforia VuMark Sample";
     public ElapsedTime runtime = new ElapsedTime();
@@ -97,7 +97,7 @@ public class Vuforia extends Central {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = "AVEnEtj/////AAAAGRuqDKUaCUOqnWNCia71FEYNQd/MLe2TCFrCq7fn6emLKOR3Q0aAXrfxI1ZyrgruipioI2KnVScenAwJ7oxut6uedThCIU8pIJfTmcl7q1P/6vYlqPm/avdhwH8Qq3CuSHkx/7aqN0SKFHKhV6c1UkShZaynBNfXd9K2MpcHJCnqzBKT2La6urdGGiXj7P/bwK3K/zBmVJY3z+lnsNBz31OS5L8ihr383ZOfC2EGVglkft4ulEEPv+CsR2Oa/5EFMXYr6tNsD2aXmygWXleSUGutBjtgZT0Ebw9/IkF99TFgo0jmM0sDpav+X5/11t+Bf6ufSP9MmGssfSDr6wi2QRctDiF50aJOL/ov6boj7d8/";
+        parameters.vuforiaLicenseKey = "AeHK+j//////AAAAGV9JzI/9h0DLhZ7c7w4sN30lJRIpNPRyXVHdsqCX+XHpMysSwND71QWYT9YFkwVxopMQaXnzmfWK7Sc2cSJJLPU9r2G/ioxim4UU4c4rPyvhtkOcZkaS6hAPo+aKdQVUsVkBsBbPIRcQOAEmp7oKqV0d/8pydpXHCAUA18eNjdoEufCSugolPo84nHnEcEiklpqljewrCObyMTTwoftkpCEabzJoHZ5s15Ztja9s9afEXBA5Vhp2OEcdxWQVoTHL5eFJog3faeMBSyiU/NKjRNHv04w+P8lMnClXXLI8BiFVof8X5MDQPv8vFRHEADe8lCpnYDh1EGM0ZkFJv+gc59k4Ky1bIdUZYNvEto3Y5WRK\n";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -113,9 +113,9 @@ public class Vuforia extends Central {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("GlyphTracking_OT");
+        VuforiaTrackable glyphBrown = relicTrackables.get(0);
+        glyphBrown.setName("glyph"); // can help in debugging; otherwise not necessary
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -131,8 +131,8 @@ public class Vuforia extends Central {
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            VuforiaTrackable vuMark = glyphBrown;
+            if (vuMark != null) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
