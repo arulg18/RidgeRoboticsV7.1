@@ -90,7 +90,7 @@ public class Red1Sample extends Central {
                     break;
 
             }
-            absturn(180,turnside.ccw,2);
+            //absturn(180,turnside.ccw,2);
             //driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.ccw);
             //driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
             //driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);

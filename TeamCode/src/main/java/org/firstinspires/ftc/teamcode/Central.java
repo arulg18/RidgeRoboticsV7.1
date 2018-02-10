@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.sun.tools.javac.tree.DCTree;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -36,8 +35,9 @@ import java.util.Arrays;
 
 public class Central extends LinearOpMode{
     //-------------------SUBCLASS VARIABLES----------------------
-    private ElapsedTime runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
 
+    public int testee = 0;
     //--------------------------CONSTANTS----------------------------
     public static team thisteam;
     //--------------------------ENCODERS---------------------
@@ -56,15 +56,20 @@ public class Central extends LinearOpMode{
     public static final boolean JEWEL_SENSOR_LED_ON = true;
     public static int count = 0;
     public static final int DEGREE_90 = 18;
+    //-------------------------INITIAL CALIBRATIONS-----------
+    public static final float startX = -5; // may need change based on field
+    public static final float startY = 2;
+
 
 
     //--------------------------TELE-OP VALUES-------------------------
-                public static final double ROTATION_SPEED = 1;
-                public static final double DEAD_ZONE_SIZE = 0.1;
-                public static final double D_PAD_SPEED = 0.4;
-                public static final double CRAWL_SPEED = 0.2;
+    public static final double ROTATION_SPEED = 0.8;
+    public static final double DEAD_ZONE_SIZE = 0.1;
+    public static final double D_PAD_SPEED = 0.4;
+    public static final double CRAWL_SPEED = 0.2;
 
     //-----------------------------POSITIONS--------------------------
+
     public static final int RedX = 24;
     public static final int BlueX = 120;
     public static final int OneY = 120;
@@ -82,15 +87,15 @@ public class Central extends LinearOpMode{
 
     //--------------------------SERVO CONFIGURATIONS-----------------
 
-            //--------------Jewel System------------------
+    //--------------Jewel System------------------
 
-                //  Minimum Positions
-                public static final double MIN_POSITION_DOWN = 0;
-                public static final double MIN_POSITION_FLICK = 0;
+    //  Minimum Positions
+    public static final double MIN_POSITION_DOWN = 0;
+    public static final double MIN_POSITION_FLICK = 0;
 
-                //  Maximum Positions
-                public static final double MAX_POSITION_DOWN = 1;
-                public static final double MAX_POSITION_FLICK = 1;
+    //  Maximum Positions
+    public static final double MAX_POSITION_DOWN = 1;
+    public static final double MAX_POSITION_FLICK = 1;
 
                 //  Initial Positions
                 public static final double START_POSITION_DOWN = 0.63;
@@ -162,16 +167,16 @@ public class Central extends LinearOpMode{
 
     //--------------------------ENUMERATIONS---------------------
             public enum movements{
-                forward(1, -1, 1, -1),
-                backward(-1, 1, -1, 1),
-                right(-1, -1, 1, 1),
-                left(1, 1, -1, -1),
+                backward(1, -1, 1, -1),
+                forward(-1, 1, -1, 1),
+                left(-1, -1, 1, 1),
+                right(1, 1, -1, -1),
                 tr(0, -1, 1, 0),
                 tl(1, 0, 0, -1),
                 br(-1, 0, 0, 1),
                 bl(0, 1, -1, 0),
-                cw(-1, -1, -1, -1),
-                ccw(1, 1, 1, 1),
+                ccw(-1, -1, -1, -1),
+                cw(1, 1, 1, 1),
                 cwback(-1,-1,0,0),
                 ccwback(1,1,0,0),
                 cwfront(0,0,-1,-1),
@@ -231,17 +236,16 @@ public class Central extends LinearOpMode{
 
 //------------------------CONFIGURATIONS----------------------
     // Sensor
-
-        BNO055IMUImpl imu;
-        BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
-        Orientation current;
-        float initorient;
-        float start;
-        float end;
-        float xtilt;
-        float ytilt;
-        public static final double sensitivity = 10;
-        public static boolean isnotstopped;
+    public BNO055IMUImpl imu;
+    public BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
+    public Orientation current;
+    float initorient;
+    float start;
+    float end;
+    float xtilt;
+    float ytilt;
+    public static final double sensitivity = 1;
+    public static boolean isnotstopped;
 
         public static final String imuRedS = "imu";
 
@@ -296,7 +300,7 @@ public class Central extends LinearOpMode{
 
 
     //------------------ARRAYS------------
-    public movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.cw, movements.ccw,movements.cwback,movements.ccwback,movements.ccwfront,movements.cwfront};
+    public movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.cw, movements.ccw, movements.cwback, movements.ccwback, movements.ccwfront, movements.cwfront};
     public DcMotor[] drivetrain = new DcMotor[4];
     public DcMotor[] glyphSystem = new DcMotor[3];
 
@@ -313,14 +317,50 @@ public class Central extends LinearOpMode{
                 setupDrivetrain();
                 setupJewel();
                 setupGlyph();
-                setupRelic();
-                setupIMU();
+                setupIMU(team.red1);
+                //setupRelic();
                 break;
             case notjewel:
                 setupDrivetrain();
                 setupGlyph();
                 //setupRelic();
-                setupIMU();
+            case teleop:
+                setupDrivetrain();
+                setupJewel();
+                centerFlicker(0);
+                setupGlyph();
+                setupIMU(team.red1);
+                break;
+            case drive:
+                setupDrivetrain();
+                break;
+            case jewel:
+                setupJewel();
+                break;
+            case relic:
+                setupRelic();
+                break;
+            case glyph:
+                setupGlyph();
+                break;
+        }
+    }
+
+    public void CentralClass(setupType setup, team player) throws InterruptedException{
+        thisteam = player;
+        switch (setup){
+            case all:
+                setupDrivetrain();
+                setupJewel();
+                setupGlyph();
+                setupRelic();
+                setupIMU(player);
+                break;
+            case notjewel:
+                setupDrivetrain();
+                setupGlyph();
+                //setupRelic();
+                setupIMU(player);
             case teleop:
                 setupDrivetrain();
                 setupJewel();
@@ -730,9 +770,9 @@ public class Central extends LinearOpMode{
         }
     }
 
-    public boolean movetry(movements direction) {
+    public boolean movetry(movements direction) throws InterruptedException{
         try {
-            driveTrainMovement(10, direction);
+            driveTrainMovement(0.2, direction);
         } catch (java.lang.InterruptedException e) {
             try {
                 stopDrivetrain();
@@ -742,40 +782,149 @@ public class Central extends LinearOpMode{
         }
         return true;
     }
-
-    public void balancer() { // very similar to tipcorrect(), fix if messy
-        xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
-        ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+    public void balancer() throws InterruptedException{ // very similar to tipcorrect(), fix if messy
+        xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle ;
+        ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle ;
         double angleoff = Math.pow((Math.sin(Math.toRadians((double) xtilt))), 2) + Math.pow(Math.sin(Math.toRadians((double) (ytilt))), 2);
-        if (angleoff > Math.sin(Math.toRadians(sensitivity))) {
-            if ((xtilt > 0 && ytilt > 0 && ytilt < xtilt) || (xtilt > 0 && ytilt < 0 && xtilt > -ytilt))//right
+        telemetry.addData("Angle Offset: ", Math.toDegrees(angleoff));
+
+        telemetry.addData("X-tilt: ", xtilt);
+        telemetry.addData("Y-tilt: ", ytilt);
+        if (Math.abs(xtilt) > sensitivity || Math.abs(ytilt) > sensitivity) {
+            telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", true);
+
+            if (Math.abs(ytilt) < xtilt)//left
             {
-                movetry(movements.left);
-            } else if ((xtilt > 0 && ytilt > 0 && xtilt < ytilt) || (xtilt < 0 && ytilt > 0 && -xtilt < ytilt))//forwards
+                telemetry.addData("left", true);
+                driveTrainMovement(0.2, movements.right);
+            } else if (ytilt >= Math.abs(xtilt))//backwards
             {
-                movetry(movements.backward);
-            } else if ((xtilt < 0 && ytilt > 0 && -xtilt > ytilt) || (xtilt < 0 && ytilt < 0 && -xtilt > -ytilt))//left
+                telemetry.addData("backwards", true);
+                driveTrainMovement(0.2, movements.forward);
+
+            } else if (-Math.abs(ytilt) > xtilt)//right
             {
-                movetry(movements.right);
-            } else if ((xtilt < 0 && ytilt < 0 && -xtilt > -ytilt) || (xtilt > 0 && ytilt < 0 && xtilt < -ytilt))//back
+                driveTrainMovement(0.2, movements.left);
+                telemetry.addData("right", true);
+            } else if (ytilt <= -Math.abs(xtilt))//forwards
             {
-                movetry(movements.forward);
+                driveTrainMovement(0.2, movements.backward);
+                telemetry.addData("forward", true);
             }
-            try {
-                tipcorrect();
-            } catch (java.lang.InterruptedException e) {
-                try {
-                    stopDrivetrain();
-                } catch (java.lang.InterruptedException i) {
-                }
+            else {
+                telemetry.addLine("No direction");
             }
+            telemetry.update();
+
+            balancer();
+
         } else {
-            try {
+            telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", false);
+            telemetry.update();
+
+            stopDrivetrain();
+
+        }
+    }
+
+
+    public void balancer(float startX, float startY) throws InterruptedException{ // very similar to tipcorrect(), fix if messy
+        xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - startX;
+        ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle - startY;
+        double angleoff = Math.pow((Math.sin(Math.toRadians((double) xtilt))), 2) + Math.pow(Math.sin(Math.toRadians((double) (ytilt))), 2);
+        telemetry.addData("Angle Offset: ", Math.toDegrees(angleoff));
+
+        telemetry.addData("X-tilt: ", xtilt);
+        telemetry.addData("Y-tilt: ", ytilt);
+        if (Math.abs(xtilt) > sensitivity || Math.abs(ytilt) > sensitivity) {
+            telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", true);
+
+            if (Math.abs(ytilt) < xtilt)//left
+            {
+                telemetry.addData("left", true);
+                driveTrainMovement(0.2, movements.right);
+            } else if (ytilt >= Math.abs(xtilt))//backwards
+            {
+                telemetry.addData("backwards", true);
+                driveTrainMovement(0.2, movements.forward);
+
+            } else if (-Math.abs(ytilt) > xtilt)//right
+            {
+                driveTrainMovement(0.2, movements.left);
+                telemetry.addData("right", true);
+            } else if (ytilt <= -Math.abs(xtilt))//forwards
+            {
+                driveTrainMovement(0.2, movements.backward);
+                telemetry.addData("forward", true);
+            }
+            else {
+                telemetry.addLine("No direction");
+            }
+            telemetry.update();
+
+            balancer(startX, startY);
+
+        } else {
+            telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", false);
+            telemetry.update();
+
+            stopDrivetrain();
+
+        }
+    }
+    public void balancer(float startX, float startY, Gamepad gamepad, double speed) throws InterruptedException{ // very similar to tipcorrect(), fix if messy
+        if (gamepad.b){
+            telemetry.addLine("Balance mode OFF");
+            telemetry.update();
+        }
+        else {
+            telemetry.addLine("Balance mode ON");
+            telemetry.update();
+            xtilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle - startX;
+            ytilt = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle - startY;
+            double angleoff = Math.pow((Math.sin(Math.toRadians((double) xtilt))), 2) + Math.pow(Math.sin(Math.toRadians((double) (ytilt))), 2);
+            telemetry.addData("Angle Offset: ", Math.toDegrees(angleoff));
+
+            telemetry.addData("X-tilt: ", xtilt);
+            telemetry.addData("Y-tilt: ", ytilt);
+            if (Math.abs(xtilt) > sensitivity || Math.abs(ytilt) > sensitivity) {
+                telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", true);
+
+                if (Math.abs(ytilt) < xtilt)//left
+                {
+                    telemetry.addData("left", true);
+                    driveTrainMovement(speed, movements.right);
+                } else if (ytilt >= Math.abs(xtilt))//backwards
+                {
+                    telemetry.addData("backwards", true);
+                    driveTrainMovement(speed, movements.forward);
+
+                } else if (-Math.abs(ytilt) > xtilt)//right
+                {
+                    driveTrainMovement(speed, movements.left);
+                    telemetry.addData("right", true);
+                } else if (ytilt <= -Math.abs(xtilt))//forwards
+                {
+                    driveTrainMovement(speed, movements.backward);
+                    telemetry.addData("forward", true);
+                }
+                else {
+                    telemetry.addLine("No direction");
+                }
+                telemetry.update();
+
+                balancer(startX, startY, gamepad, speed);
+
+            } else {
+                telemetry.addData("angleoff > Math.sin(Math.toRadians(sensitivity))", false);
+                telemetry.update();
+
                 stopDrivetrain();
-            } catch (java.lang.InterruptedException i) {
+
             }
         }
     }
+
 
     public void MovetoPos(double xtarget, double ytarget) throws InterruptedException {
         double x;
@@ -858,6 +1007,10 @@ public class Central extends LinearOpMode{
     public void setRuntime(ElapsedTime time) throws InterruptedException {
         runtime = time;
     }
+    public void setTestee(int test){
+        testee = test;
+    }
+
 
     //------------------RELIC FUNCTIONS------------------------------------------------------------------------
     //none right now
@@ -1033,7 +1186,7 @@ public class Central extends LinearOpMode{
         motorDriveMode(EncoderMode.ON, motorFR, motorFL, motorBR, motorBL);
     }
     public void setupRelic() throws InterruptedException{
-        angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
+        //angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
         Claw = servo(Claw, hardwareMap, ClawS, Servo.Direction.FORWARD, MIN_POSITION_CLAW, MAX_POSITION_CLAW, START_POSITION_CLAW);
         relicMotorOut = motor(relicMotorOut, hardwareMap, relicMotorOutS, DcMotorSimple.Direction.FORWARD);
         relicMotorIn = motor(relicMotorIn, hardwareMap, relicMotorInS, DcMotorSimple.Direction.FORWARD);
@@ -1084,7 +1237,7 @@ public class Central extends LinearOpMode{
         //origin is @ bottom left when looking at the board with red1 @ top left corner
         // 0 degrees is @ east when looking at the board with red1 @ top left corner
         Velocity veloInit = new Velocity(DistanceUnit.INCH, 0, 0, 0, 0);
-        imu.startAccelerationIntegration(startpos,veloInit,5);
+        //imu.startAccelerationIntegration(new Position(),new Velocity(),1000);
         initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 

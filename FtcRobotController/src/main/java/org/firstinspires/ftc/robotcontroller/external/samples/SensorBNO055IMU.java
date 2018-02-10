@@ -55,7 +55,6 @@ import java.util.Locale;
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
 @Autonomous(name = "Sensor: BNO055 IMU", group = "Sensor")
-@Disabled                            // Comment this out to add to the opmode list
 public class SensorBNO055IMU extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------
@@ -103,6 +102,10 @@ public class SensorBNO055IMU extends LinearOpMode
 
         // Loop and update the dashboard
         while (opModeIsActive()) {
+            telemetry.addData("Acceleration: ", imu.getAcceleration());
+            telemetry.addData("Linear Acceleration: ", imu.getLinearAcceleration());
+            telemetry.addData("Position: ", imu.getPosition());
+            telemetry.addData("Velocity: ", imu.getVelocity());
             telemetry.update();
         }
     }

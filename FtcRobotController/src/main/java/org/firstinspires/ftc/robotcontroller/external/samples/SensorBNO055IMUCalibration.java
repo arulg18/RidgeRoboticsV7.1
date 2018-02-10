@@ -41,6 +41,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
@@ -99,7 +101,6 @@ import java.util.Locale;
  * @see <a href="https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_DS000_14.pdf">BNO055 specification</a>
  */
 @TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "Sensor")
-@Disabled                            // Uncomment this to add to the opmode list
 public class SensorBNO055IMUCalibration extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------
@@ -145,6 +146,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
             idle();
         }
 
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 5);
         telemetry.log().add("...started...");
 
         while (opModeIsActive()) {
@@ -171,6 +173,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
                 }
             }
 
+
             telemetry.update();
         }
     }
@@ -187,6 +190,10 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
                 angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 }
             });
+
+        telemetry.addData("Acceleration: ", imu.getAcceleration());
+        telemetry.addData("Position: ", imu.getPosition());
+        telemetry.addData("Velocity: ", imu.getVelocity());
 
         telemetry.addLine()
             .addData("status", new Func<String>() {

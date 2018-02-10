@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Central;
@@ -30,7 +31,7 @@ public class DriveMode extends Central {
     public static boolean x = true;
     public static boolean bPrevState = false;
     public static boolean bCurrState = false;
-
+//UNCOMMENT CRAWL MODE ACTIVATED TLEMETRY
     @Override
     public void runOpMode() throws InterruptedException {
         CentralClass(setupType.teleop);
@@ -61,6 +62,9 @@ public class DriveMode extends Central {
             xAxis2 = Range.clip(xAxis2, -1, 1);
 
 
+            if (gamepad1.x){
+                balancer(startX, startY, gamepad1, 0.2);
+            }
 
             bCurrState = gamepad1.a;
 
@@ -72,8 +76,8 @@ public class DriveMode extends Central {
 
 
             if (x) {
-                telemetry.addLine("Regular Mode Activated");
-                telemetry.update();
+                //telemetry.addLine("Regular Mode Activated");
+                //telemetry.update();
                 if (leftStickButtonPressed) {
                     // CLOCKWISE
                     driveTrainMovement(ROTATION_SPEED, movements.cw);
@@ -127,8 +131,8 @@ public class DriveMode extends Central {
                 }
             }
             else {
-                telemetry.addLine("Crawl Mode Activated");
-                telemetry.update();
+                ///telemetry.addLine("Crawl Mode Activated");
+                //telemetry.update();
                 if (leftStickButtonPressed) {
                     // CLOCKWISE
                     driveTrainMovement(CRAWL_SPEED, movements.cw);
@@ -213,7 +217,10 @@ public class DriveMode extends Central {
                 leftTread.setPower(0);
             }
 
+            telemetry.addData("IMU Angular Orientation: ", imu.getAngularOrientation());
 
+
+            telemetry.update();
             /*
             if (gamepad2.dpad_up){
                 relicMotorIn.setPower(-0.6);

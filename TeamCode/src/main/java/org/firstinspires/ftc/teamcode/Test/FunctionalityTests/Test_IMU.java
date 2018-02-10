@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Central;
 
 
@@ -22,8 +24,18 @@ public class Test_IMU extends Central {
         waitForStart();
 
         runtime.reset();
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
         while (opModeIsActive()) {
             //turn((float)0.75, turnside.cw);
+            while(!imu.isGyroCalibrated() || !imu.isAccelerometerCalibrated() || !imu.isMagnetometerCalibrated() && opModeIsActive()){
+                telemetry.addData("Gyro: ", imu.isGyroCalibrated());
+                telemetry.addData("Accelerometer: ", imu.isAccelerometerCalibrated());
+                telemetry.addData("Magnetometer: ", imu.isMagnetometerCalibrated());
+                telemetry.update();
+            }
+
+            telemetry.addData("Gyro Status: ", imu.isGyroCalibrated());
             telemetry.addData("IMU Acceleration:s ", imu.getAcceleration());
             telemetry.addData("IMU Angular Orientation: ", imu.getAngularOrientation());
             telemetry.addData("IMU Gravity: ", imu.getGravity());

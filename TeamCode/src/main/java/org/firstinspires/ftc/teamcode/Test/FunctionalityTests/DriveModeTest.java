@@ -43,6 +43,8 @@ public class DriveModeTest extends Central {
             yAxis2 = Range.clip(yAxis2, -1, 1);
             xAxis2 = Range.clip(xAxis2, -1, 1);
 
+
+
             if(leftStickButtonPressed){
                 // CLOCKWISE
                 telemetry.addLine("Moving Clockwise");
@@ -168,6 +170,7 @@ public class DriveModeTest extends Central {
                 telemetry.update();
                 stopDrivetrain();
             }
+
 
 
 
