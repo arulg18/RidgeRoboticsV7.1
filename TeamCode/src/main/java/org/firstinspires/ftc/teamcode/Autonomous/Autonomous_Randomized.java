@@ -3,25 +3,20 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.Central;
-
 import org.firstinspires.ftc.teamcode.Central;
 
 
 /**
  * Created by arulgupta on 12/14/17.
  */
-@Autonomous(name = "Blue 1", group = "Autonomous")
+@Autonomous(name = "Blue 1 Randomized", group = "Autonomous")
 
-public class Autonomous_Blue1 extends Central {
+public class Autonomous_Randomized extends Central {
 
     team side = team.blue1;
     public static final String TAG = "Vuforia VuMark Sample";
@@ -54,48 +49,19 @@ public class Autonomous_Blue1 extends Central {
         relicTrackables.activate();
 
         while (opModeIsActive()) {
-            flick(side);
-            sweepServo(pullServo, LOW_POSITION_PULL, 0.04, 30);
-
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                if (RelicRecoveryVuMark.LEFT == vuMark) {    //Block should be placed in the left column
-                    position = 0;
-                } else if (RelicRecoveryVuMark.CENTER == vuMark) {  //Block should be placed in the center column
-                    position = 1;
-                } else if (RelicRecoveryVuMark.RIGHT == vuMark) { //Block should be placed in the right columm
-                    position = 2;
-                } else {
-                    telemetry.addData("VuMark", "not visible");
-                }
-            }
-
-            telemetry.update();
-
-            switch(position){
-                case 0:         //Left
-                    driveTrainEncoderMovement(0.5, 46-9.6-8.6, 10, 100, movements.forward);
-
-                    break;
-                case 1:         //Center
-                    driveTrainEncoderMovement(0.5, 46-9.1, 10, 100, movements.forward);
+            pullServo.setPosition(0.8);
+            driveTrainEncoderMovement(1, 1, 10, 100, movements.backward);
 
 
-                    break;
-                case 2:         //Right
-                    driveTrainEncoderMovement(0.5, 44, 10, 100, movements.forward);
-
-                    break;
-
-            }
-
-            driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.cw);
-            driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
+            sleep(500);
+            rightTread.setPower(0.8);
+            leftTread.setPower(0.8);
 
 
-            GlyphDown();
+            driveTrainEncoderMovement(0.5, 46-9.1, 10, 100, movements.forward);
+            rightTread.setPower(0);
+            leftTread.setPower(0);
+
 
             pullServo.setPosition(0.8);
 

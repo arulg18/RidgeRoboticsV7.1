@@ -21,7 +21,6 @@ public class Test_IMUPosition extends Central {
 
         CentralClass(setupType.all);
         waitForStart();
-        imu.startAccelerationIntegration(new Position(),new Velocity(),500);
 
         runtime.reset();
         while (opModeIsActive()) {

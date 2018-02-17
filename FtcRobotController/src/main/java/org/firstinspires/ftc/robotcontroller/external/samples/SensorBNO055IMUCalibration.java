@@ -146,7 +146,6 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
             idle();
         }
 
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 5);
         telemetry.log().add("...started...");
 
         while (opModeIsActive()) {
@@ -166,11 +165,14 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
                 ReadWriteFile.writeFile(file, calibrationData.serialize());
                 telemetry.log().add("saved to '%s'", filename);
 
+
                 // Wait for the button to be released
                 while (gamepad1.a) {
+
                     telemetry.update();
                     idle();
                 }
+
             }
 
 

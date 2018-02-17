@@ -197,6 +197,19 @@ public class DriveMode extends Central {
                 sleep(30);
             }
 
+            if (gamepad2.dpad_right){
+                relicMotorIn.setPower(-1);
+                sleep(30);
+            }
+            else if (gamepad2.dpad_left){
+                relicMotorIn.setPower(1);
+                sleep(30);
+
+            }
+            else {
+                relicMotorIn.setPower(0);
+            }
+
             if (gamepad2.y){
                 rightTread.setPower(0.6);
                 leftTread.setPower(0.6);
