@@ -20,6 +20,9 @@ public class DriveMode extends Central {
     public static float yAxis2;
     public static float xAxis2;
 
+    public static float yClaw;
+    public static float xClaw;
+
     public static float fb;
     public static float rl;
 
@@ -45,6 +48,9 @@ public class DriveMode extends Central {
 
             yAxis2 = -gamepad1.right_stick_y; // Diagonal Directions y-axis
             xAxis2 = gamepad1.right_stick_x;  // Diagonal Directions x-axis
+
+            yClaw = -gamepad2.right_stick_y;
+            xClaw = gamepad2.right_stick_x;
 
             fb = Math.abs(yAxis1);
             rl = Math.abs(xAxis1);
@@ -197,18 +203,7 @@ public class DriveMode extends Central {
                 sleep(30);
             }
 
-            if (gamepad2.dpad_right){
-                relicMotorIn.setPower(-1);
-                sleep(30);
-            }
-            else if (gamepad2.dpad_left){
-                relicMotorIn.setPower(1);
-                sleep(30);
 
-            }
-            else {
-                relicMotorIn.setPower(0);
-            }
 
             if (gamepad2.y){
                 rightTread.setPower(0.6);
@@ -230,46 +225,76 @@ public class DriveMode extends Central {
                 leftTread.setPower(0);
             }
 
+
+
+            telemetry.addData("Angle Servo Position: ", angleServo.getPosition());
+
+            if (gamepad2.right_trigger > 0.25){
+                relicMotorIn.setPower(-1);
+            }
+            else if (gamepad2.left_trigger > 0.25){
+                relicMotorIn.setPower(1);
+
+            }
+            else {
+                relicMotorIn.setPower(0);
+            }
+
+            if (gamepad2.dpad_up){
+                angleServo.setPosition(angleServo.getPosition() + 0.04);
+                sleep(30);
+                telemetry.addLine("Angle Up");
+                telemetry.update();
+            }
+            else if (gamepad2.dpad_down){
+                angleServo.setPosition(angleServo.getPosition() - 0.04);
+                sleep(30);
+                telemetry.addLine("Angle Down");
+                telemetry.update();
+            }else {
+                telemetry.addLine("Angle None");
+                telemetry.update();
+            }
+
+            if (gamepad2.dpad_right){
+                Claw.setPosition(Claw.getPosition() + 0.04);
+                sleep(30);
+                telemetry.addLine("Claw Up");
+                telemetry.update();
+            }
+            else if (gamepad2.dpad_left){
+                Claw.setPosition(Claw.getPosition() - 0.04);
+                sleep(30);
+                telemetry.addLine("Claw Down");
+                telemetry.update();
+            }else {
+                telemetry.addLine("Claw None");
+                telemetry.update();
+            }
+
+            if (yClaw > 0.1){
+                Claw.setPosition(Claw.getPosition() + 0.04);
+                sleep(30);
+                telemetry.addLine("Claw Up");
+                telemetry.update();
+            }
+            else if (yClaw < -0.1){
+                Claw.setPosition(Claw.getPosition() - 0.04);
+                sleep(30);
+                telemetry.addLine("Claw Down");
+                telemetry.update();
+            }
+            else {
+                telemetry.addLine("None");
+                telemetry.update();
+            }
+
+
             telemetry.addData("IMU Angular Orientation: ", imu.getAngularOrientation());
 
 
             telemetry.update();
-            /*
-            if (gamepad2.dpad_up){
-                relicMotorIn.setPower(-0.6);
-                relicMotorOut.setPower(-0.6);
-                telemetry.addLine("Moving Up");
-                telemetry.update();
-                sleep(30);
-            }
-            else if (gamepad2.dpad_down){
-                relicMotorIn.setPower(0.6);
-                relicMotorOut.setPower(0.6);
-                sleep(30);
-                telemetry.addLine("Moving Down");
-                telemetry.update();
-            }
-            else {
-                relicMotorIn.setPower(0);
-                relicMotorOut.setPower(0);
-            }
 
-            if (gamepad2.left_trigger > 0.25){
-                relicMotorOut.setPower(-0.6);
-                telemetry.addLine("Moving Up");
-                telemetry.update();
-                sleep(30);
-            }
-            else if (gamepad2.right_trigger > 0.25){
-                relicMotorOut.setPower(0.6);
-                sleep(30);
-                telemetry.addLine("Moving Down");
-                telemetry.update();
-            }
-            else {
-                relicMotorOut.setPower(0);
-            }
-            */
         }
 //        initialPositionFlicker(0);
 

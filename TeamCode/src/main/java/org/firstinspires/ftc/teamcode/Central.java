@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
-import com.sun.tools.javac.tree.DCTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -55,9 +54,9 @@ public class Central extends LinearOpMode{
     private static final boolean JEWEL_SENSOR_LED_ON = true;
     private static int count = 0;
     protected static final int DEGREE_90 = 18;
-    //-------------------------INITIAL CALIBRATIONS-----------
-    protected static final float startX = -5; // may need change based on field
-    protected static final float startY = 2;
+    //-------------------------INITIAL CALIBRATIOxNS-----------
+    protected static final float startX = -3; // may need change based on field
+    protected static final float startY = -2;
 
 
 
@@ -134,6 +133,27 @@ public class Central extends LinearOpMode{
 
 
 
+    
+            //-------------AutoGlyph System-----------------
+                //  Minimum Positions
+                public static final double MIN_POSITION_RGRAB = 0;
+                public static final double MIN_POSITION_LGRAB = 0;
+
+                //  Maximum Positions
+                public static final double MAX_POSITION_RGRAB = 1;
+                public static final double MAX_POSITION_LGRAB = 1;
+
+                //  Initial Positions
+                public static final double START_POSITION_RGRAB = 0.2;
+                public static final double START_POSITION_LGRAB = 1;
+
+                //  Significant Positions
+                public static final double RGRAB_POSITION = 0.5;
+                public static final double LGRAB_POSITION = 0.5;
+                
+                public static final double R_READY_POSITION = 0.4;
+                public static final double L_READY_POSITION = 0.4;
+
 
     //--------------Relic System------------------
 
@@ -146,7 +166,7 @@ public class Central extends LinearOpMode{
                 public static final double MAX_POSITION_WRIST = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_CLAW = 0;
+                public static final double START_POSITION_CLAW = 1;
                 public static final double START_POSITION_WRIST = 0;
 
                 //  Significant Positions
@@ -283,12 +303,21 @@ public class Central extends LinearOpMode{
 
     //  Relic Systems
         public DcMotor relicMotorIn;
-        public Servo angleServo;
         public Servo Claw;
+        public Servo angleServo;
 
         public static final String relicMotorInS = "relicMotor";
         public static final String angleServoS = "angleServo";
         public static final String ClawS = "claw";
+        
+        
+    // AutoGlyph
+        public Servo RGrabber;
+        public Servo LGrabber;
+        
+        public static final String RGrabberS = "rightGrabber";
+        public static final String LGrabberS = "leftGrabber";
+        
 
 
 
@@ -312,6 +341,7 @@ public class Central extends LinearOpMode{
                 setupGlyph();
                 setupIMU(team.red1);
                 setupRelic();
+                setupAutoGlyph();
                 break;
             case notjewel:
                 setupDrivetrain();
@@ -324,6 +354,7 @@ public class Central extends LinearOpMode{
                 setupGlyph();
                 setupIMU(team.red1);
                 setupRelic();
+                setupAutoGlyph();
                 break;
             case drive:
                 setupDrivetrain();
@@ -378,7 +409,7 @@ public class Central extends LinearOpMode{
         }
     }
 
-    public void runOpMode() throws InterruptedException{
+    public void  runOpMode() throws InterruptedException{
         CentralClass(setupType.all);
     }
 
@@ -1009,12 +1040,12 @@ public class Central extends LinearOpMode{
 
     //------------------GLYPH FUNCTIONS------------------------------------------------------------------------
     protected void GlyphDown() throws InterruptedException{
-        pullServo.setPosition(0.4);
+        pullServo.setPosition(0.5);
         sleep(500);
         powerMotors(-0.8, 2000, rightTread, leftTread);
     }
     protected void GlyphDownONALL() throws InterruptedException{
-        pullServo.setPosition(0.4);
+        pullServo.setPosition(0.5);
         sleep(500);
 
         rightTread.setPower(-0.8);
@@ -1101,8 +1132,20 @@ public class Central extends LinearOpMode{
 
     }
 
-    //------------------SERVO FUNCTIONS------------------------------------------------------------------------
-    //none right now
+
+    //------------------AUTOGLYPH FUNCTIONS------------------------------------------------------------------------
+    protected void autoGrabGlyph() throws InterruptedException{
+        RGrabber.setPosition(RGRAB_POSITION);
+        LGrabber.setPosition(LGRAB_POSITION);
+    }
+    protected void autoDropGlyph() throws InterruptedException{
+        RGrabber.setPosition(R_READY_POSITION);
+        LGrabber.setPosition(L_READY_POSITION);
+    }
+    protected void autoReturnServo() throws InterruptedException{
+        RGrabber.setPosition(START_POSITION_RGRAB);
+        LGrabber.setPosition(START_POSITION_LGRAB);
+    }
 
     //------------------HARDWARE SETUP FUNCTIONS------------------------------------------------------------------------
     public DcMotor motor(DcMotor motor, HardwareMap hardwareMap, String name, DcMotor.Direction direction) throws InterruptedException {
@@ -1148,6 +1191,13 @@ public class Central extends LinearOpMode{
         servo.setPosition(start);
         return servo;
     }
+    public CRServo servo(CRServo servo, HardwareMap hardwareMap, String name, DcMotorSimple.Direction direction, double startSpeed) throws InterruptedException {
+        servo = hardwareMap.crservo.get(name);
+        servo.setDirection(direction);
+
+        servo.setPower(0);
+        return servo;
+    }
 
     public ColorSensor colorSensor(ColorSensor sensor, HardwareMap hardwareMap, String name, boolean ledOn) throws InterruptedException {
         sensor = hardwareMap.colorSensor.get(name);
@@ -1178,7 +1228,7 @@ public class Central extends LinearOpMode{
         motorDriveMode(EncoderMode.ON, motorFR, motorFL, motorBR, motorBL);
     }
     public void setupRelic() throws InterruptedException{
-        //angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
+        angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
         Claw = servo(Claw, hardwareMap, ClawS, Servo.Direction.FORWARD, MIN_POSITION_CLAW, MAX_POSITION_CLAW, START_POSITION_CLAW);
         relicMotorIn = motor(relicMotorIn, hardwareMap, relicMotorInS, DcMotorSimple.Direction.FORWARD);
     }// FINISH
@@ -1193,6 +1243,12 @@ public class Central extends LinearOpMode{
         pullServo = servo(pullServo, hardwareMap, pullServoS, Servo.Direction.FORWARD, MIN_POSITION_PULL, MAX_POSITION_PULL, START_POSITION_PULL);
         leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
         rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+    }
+    
+    public void setupAutoGlyph() throws InterruptedException{
+        RGrabber = servo(RGrabber, hardwareMap, RGrabberS, Servo.Direction.FORWARD, MIN_POSITION_RGRAB, MAX_POSITION_RGRAB, R_READY_POSITION);
+        LGrabber = servo(LGrabber, hardwareMap, LGrabberS, Servo.Direction.FORWARD, MIN_POSITION_LGRAB, MAX_POSITION_LGRAB, L_READY_POSITION);
+        
     }
 
     public void setupIMU(team side) throws InterruptedException {

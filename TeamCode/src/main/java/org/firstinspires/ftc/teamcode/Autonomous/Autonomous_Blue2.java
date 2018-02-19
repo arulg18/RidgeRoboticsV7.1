@@ -67,21 +67,23 @@ public class Autonomous_Blue2 extends Central {
                     telemetry.addData("VuMark", "not visible");
                 }
             }
+            telemetry.addData("Chosen: ", (position == 0 ? "left" : (position == 1 ? "center" : "right")));
             telemetry.update();
+
 
             driveTrainEncoderMovement(0.7, 27, 10, 100, movements.forward);
             switch(position){
                 case 0:         //Left
-                    driveTrainEncoderMovement(0.5, 10, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.5, 10, 10, 100, movements.right);
 
                     break;
                 case 1:         //Center
-                    driveTrainEncoderMovement(0.5, 20, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.5, 20, 10, 100, movements.right);
 
 
                     break;
                 case 2:         //Right
-                    driveTrainEncoderMovement(0.7, 30, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.7, 30, 10, 100, movements.right);
 
                     break;
 
