@@ -167,11 +167,20 @@ public class Central extends LinearOpMode{
 
     //--------------------------ENUMERATIONS---------------------
             public enum movements{
-                //motor1 = right = first
-                backward(-1, -1),
-                forward(1, 1),
-                left(-1, -1),
-                right(1, 1),
+                backward(1, -1, 1, -1),
+                forward(-1, 1, -1, 1),
+                left(-1, -1, 1, 1),
+                right(1, 1, -1, -1),
+                tr(0, -1, 1, 0),
+                tl(1, 0, 0, -1),
+                br(-1, 0, 0, 1),
+                bl(0, 1, -1, 0),
+                ccw(-1, -1, -1, -1),
+                cw(1, 1, 1, 1),
+                cwback(-1,-1,0,0),
+                ccwback(1,1,0,0),
+                cwfront(0,0,-1,-1),
+                ccwfront(0,0,1,1),
 
                 glyphUp,
                 glyphDown,
