@@ -50,8 +50,13 @@ public class Central extends LinearOpMode{
 
     private static final int BLUE_COLOR_VALUE = 1;
     private static final int RED_COLOR_VALUE = 5;
+    private static final int MAX_BROWN_COLOR_VALUE = 8;
+    private static final int MIN_BROWN_COLOR_VALUE = 9;
+    private static final int MAX_GREY_COLOR_VALUE = 10;
+    private static final int MIN_GREY_COLOR_VALUE = 11;
 
     private static final boolean JEWEL_SENSOR_LED_ON = true;
+    private static final boolean GLYPH_COLOR_SENSOR_LED_ON = true;
     private static int count = 0;
     protected static final int DEGREE_90 = 18;
     //-------------------------INITIAL CALIBRATIOxNS-----------
@@ -295,10 +300,12 @@ public class Central extends LinearOpMode{
         public Servo pullServo;
         public DcMotor rightTread;
         public DcMotor leftTread;
+        public ColorSensor glyphColorSensor;
 
         public static final String pullServoS = "pullServo"; // updated //Configured
         public static final String rightTreadS = "rightTread"; // updated //Configured
         public static final String leftTreadS = "leftTread"; // updated //Configured
+        public static final String glyphColorSensorS = "glyphSensor";
 
 
     //  Relic Systems
@@ -1132,6 +1139,27 @@ public class Central extends LinearOpMode{
 
     }
 
+    public int colorGlyph() throws InterruptedException {
+
+        glyphColorSensor.enableLed(GLYPH_COLOR_SENSOR_LED_ON);
+        sleep(1500);
+
+        telemetry.addData("Brown Glyph", MAX_BROWN_COLOR_VALUE <= glyphColorSensor.argb() & glyphColorSensor.argb() >= MIN_BROWN_COLOR_VALUE);
+        telemetry.addData("Grey Glyph", MAX_GREY_COLOR_VALUE <= glyphColorSensor.argb() & glyphColorSensor.argb() >= MIN_GREY_COLOR_VALUE);
+
+
+        telemetry.update();
+            if (MAX_BROWN_COLOR_VALUE <= glyphColorSensor.argb() & glyphColorSensor.argb() >= MIN_BROWN_COLOR_VALUE) {
+                return 1;
+            } else if (MAX_GREY_COLOR_VALUE <= glyphColorSensor.argb() & glyphColorSensor.argb() >= MIN_GREY_COLOR_VALUE) {
+                return 2;
+            }else{
+                return 0;
+            }
+        }
+
+
+
 
     //------------------AUTOGLYPH FUNCTIONS------------------------------------------------------------------------
     protected void autoGrabGlyph() throws InterruptedException{
@@ -1208,6 +1236,7 @@ public class Central extends LinearOpMode{
 
         return sensor;
     }
+
 
     public void powerMotors(double speed, long time, DcMotor... motors) {
         for (DcMotor motor : motors) {
