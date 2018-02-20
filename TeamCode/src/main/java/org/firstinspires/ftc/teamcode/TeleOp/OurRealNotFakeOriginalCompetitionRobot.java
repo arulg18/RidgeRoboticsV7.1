@@ -33,15 +33,16 @@ public class OurRealNotFakeOriginalCompetitionRobot  extends Central {
         leftMotor = motor(leftMotor, hardwareMap, leftMotorS, DcMotorSimple.Direction.FORWARD);
         waitForStart();
         while(opModeIsActive()) {
-            float rightPower = gamepad1.left_stick_y;
-            float leftPower = -gamepad1.right_stick_y;
-            if (rightPower < 0.1){
+            float leftPower = gamepad1.left_stick_y;
+            float rightPower = gamepad1.right_stick_y;
+            if (rightPower > -0.1 && rightPower < 0.1){
                 rightPower = 0;
             }
-            if (leftPower < 0.1){
+
+            if (leftPower > -0.1 && leftPower < 0.1){
                 leftPower = 0;
             }
-            rightMotor.setPower(rightPower);
+            rightMotor.setPower(-rightPower);
             leftMotor.setPower(leftPower);
         }
     }

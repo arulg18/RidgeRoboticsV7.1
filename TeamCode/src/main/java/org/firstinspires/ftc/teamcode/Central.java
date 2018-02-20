@@ -55,8 +55,8 @@ public class Central extends LinearOpMode{
     private static int count = 0;
     protected static final int DEGREE_90 = 18;
     //-------------------------INITIAL CALIBRATIOxNS-----------
-    protected static final float startX = -3; // may need change based on field
-    protected static final float startY = -2;
+    protected static final float startX = 0; // may need change based on field
+    protected static final float startY = -1;
 
 
 
@@ -103,8 +103,8 @@ public class Central extends LinearOpMode{
                 //  Significant Positions
 
                     //  Centered Positions
-                    public static final double CENTER_POSITION_DOWN = 0.5;
-                    public static final double CENTER_POSITION_FLICK = 0.5;
+                    public static final double CENTER_POSITION_DOWN = 0.55;
+                    public static final double CENTER_POSITION_FLICK = 0.55;
 
                     //  Flick Positions
                     public static final double LOW_POSITION_DOWN = 0;
@@ -167,7 +167,7 @@ public class Central extends LinearOpMode{
 
                 //  Initial Positions
                 public static final double START_POSITION_CLAW = 1;
-                public static final double START_POSITION_WRIST = 0;
+                public static final double START_POSITION_WRIST = 0.2;
 
                 //  Significant Positions
 
@@ -1042,14 +1042,14 @@ public class Central extends LinearOpMode{
     protected void GlyphDown() throws InterruptedException{
         pullServo.setPosition(0.5);
         sleep(500);
-        powerMotors(-0.8, 2000, rightTread, leftTread);
+        powerMotors(-1, 2000, rightTread, leftTread);
     }
     protected void GlyphDownONALL() throws InterruptedException{
         pullServo.setPosition(0.5);
         sleep(500);
 
-        rightTread.setPower(-0.8);
-        leftTread.setPower(-0.8);
+        rightTread.setPower(-1);
+        leftTread.setPower(-1);
     }
     protected void GlyphOFF() throws InterruptedException{
         pullServo.setPosition(0.8);
@@ -1231,6 +1231,8 @@ public class Central extends LinearOpMode{
         angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_WRIST, MAX_POSITION_WRIST, START_POSITION_WRIST);
         Claw = servo(Claw, hardwareMap, ClawS, Servo.Direction.FORWARD, MIN_POSITION_CLAW, MAX_POSITION_CLAW, START_POSITION_CLAW);
         relicMotorIn = motor(relicMotorIn, hardwareMap, relicMotorInS, DcMotorSimple.Direction.FORWARD);
+        telemetry.addLine("Setup");
+        telemetry.update();
     }// FINISH
     public void setupJewel() throws InterruptedException{
         jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, START_POSITION_DOWN);
@@ -1248,7 +1250,7 @@ public class Central extends LinearOpMode{
     public void setupAutoGlyph() throws InterruptedException{
         RGrabber = servo(RGrabber, hardwareMap, RGrabberS, Servo.Direction.FORWARD, MIN_POSITION_RGRAB, MAX_POSITION_RGRAB, R_READY_POSITION);
         LGrabber = servo(LGrabber, hardwareMap, LGrabberS, Servo.Direction.FORWARD, MIN_POSITION_LGRAB, MAX_POSITION_LGRAB, L_READY_POSITION);
-        
+
     }
 
     public void setupIMU(team side) throws InterruptedException {

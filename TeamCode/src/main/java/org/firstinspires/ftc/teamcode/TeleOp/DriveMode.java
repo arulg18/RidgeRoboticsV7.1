@@ -206,8 +206,8 @@ public class DriveMode extends Central {
 
 
             if (gamepad2.y){
-                rightTread.setPower(0.6);
-                leftTread.setPower(0.6);
+                rightTread.setPower(0.9);
+                leftTread.setPower(1);
                 sleep(30);
             }
             else if (gamepad2.right_bumper){
@@ -241,14 +241,12 @@ public class DriveMode extends Central {
             }
 
             if (gamepad2.dpad_up){
-                angleServo.setPosition(angleServo.getPosition() + 0.04);
-                sleep(30);
+                angleServo.setPosition(angleServo.getPosition() + 0.01);
                 telemetry.addLine("Angle Up");
                 telemetry.update();
             }
             else if (gamepad2.dpad_down){
-                angleServo.setPosition(angleServo.getPosition() - 0.04);
-                sleep(30);
+                angleServo.setPosition(angleServo.getPosition() - 0.01);
                 telemetry.addLine("Angle Down");
                 telemetry.update();
             }else {
@@ -257,14 +255,14 @@ public class DriveMode extends Central {
             }
 
             if (gamepad2.dpad_right){
-                Claw.setPosition(Claw.getPosition() + 0.04);
-                sleep(30);
+                Claw.setPosition(Claw.getPosition() + 0.01);
+
                 telemetry.addLine("Claw Up");
                 telemetry.update();
             }
             else if (gamepad2.dpad_left){
-                Claw.setPosition(Claw.getPosition() - 0.04);
-                sleep(30);
+                Claw.setPosition(Claw.getPosition() - 0.01);
+
                 telemetry.addLine("Claw Down");
                 telemetry.update();
             }else {
@@ -273,14 +271,14 @@ public class DriveMode extends Central {
             }
 
             if (yClaw > 0.1){
-                Claw.setPosition(Claw.getPosition() + 0.04);
-                sleep(30);
+                Claw.setPosition(Claw.getPosition() + 0.01);
+
                 telemetry.addLine("Claw Up");
                 telemetry.update();
             }
             else if (yClaw < -0.1){
-                Claw.setPosition(Claw.getPosition() - 0.04);
-                sleep(30);
+                Claw.setPosition(Claw.getPosition() - 0.01);
+
                 telemetry.addLine("Claw Down");
                 telemetry.update();
             }
