@@ -60,8 +60,9 @@ public class Central extends LinearOpMode{
     private static int count = 0;
     protected static final int DEGREE_90 = 18;
     //-------------------------INITIAL CALIBRATIOxNS-----------
-    protected static final float startX = 0; // may need change based on field
-    protected static final float startY = -1;
+    protected static final float startX = -1; // may need change based on field
+    protected static final float startY = 2;
+
 
 
 
@@ -102,14 +103,14 @@ public class Central extends LinearOpMode{
     public static final double MAX_POSITION_FLICK = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_DOWN = 0.63;
-                public static final double START_POSITION_FLICK = 0.5-0.11;
+                public static final double START_POSITION_DOWN = 0.65;
+                public static final double START_POSITION_FLICK = 0.32;
 
                 //  Significant Positions
 
                     //  Centered Positions
-                    public static final double CENTER_POSITION_DOWN = 0.55;
-                    public static final double CENTER_POSITION_FLICK = 0.55;
+                    public static final double CENTER_POSITION_DOWN = 0.65;
+                    public static final double CENTER_POSITION_FLICK = 0.42;
 
                     //  Flick Positions
                     public static final double LOW_POSITION_DOWN = 0;
@@ -142,22 +143,22 @@ public class Central extends LinearOpMode{
             //-------------AutoGlyph System-----------------
                 //  Minimum Positions
                 public static final double MIN_POSITION_RGRAB = 0;
-                public static final double MIN_POSITION_LGRAB = 0;
+                public static final double MIN_POSITION_LGRAB = 0.4;
 
                 //  Maximum Positions
-                public static final double MAX_POSITION_RGRAB = 1;
-                public static final double MAX_POSITION_LGRAB = 1;
+                public static final double MAX_POSITION_RGRAB = 0.54;
+                public static final double MAX_POSITION_LGRAB = 0.94;
 
                 //  Initial Positions
-                public static final double START_POSITION_RGRAB = 0.2;
+                public static final double START_POSITION_RGRAB = 1;
                 public static final double START_POSITION_LGRAB = 1;
 
                 //  Significant Positions
-                public static final double RGRAB_POSITION = 0.5;
-                public static final double LGRAB_POSITION = 0.5;
+                public static final double RGRAB_POSITION = 0;
+                public static final double LGRAB_POSITION = 0.7;
                 
-                public static final double R_READY_POSITION = 0.4;
-                public static final double L_READY_POSITION = 0.4;
+                public static final double R_READY_POSITION = 0;
+                public static final double L_READY_POSITION = 0;
 
 
     //--------------Relic System------------------
@@ -171,8 +172,8 @@ public class Central extends LinearOpMode{
                 public static final double MAX_POSITION_WRIST = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_CLAW = 1;
-                public static final double START_POSITION_WRIST = 0.2;
+                public static final double START_POSITION_CLAW = 0.7;
+                public static final double START_POSITION_WRIST = 0.8;
 
                 //  Significant Positions
 
@@ -194,8 +195,8 @@ public class Central extends LinearOpMode{
             public enum movements{
                 backward(-1, 1, -1, 1),
                 forward(1, -1, 1, -1),
-                left(-1, -1, 1, 1),
-                right(1, 1, -1, -1),
+                left(1, 1, -1, -1),
+                right(-1, -1, 1, 1),
                 tr(0, -1, 1, 0),
                 tl(1, 0, 0, -1),
                 br(-1, 0, 0, 1),
@@ -289,6 +290,7 @@ public class Central extends LinearOpMode{
     //  Jewel Systems
         public Servo jewelDown;
         public Servo jewelFlick;
+
         public ColorSensor jewelSensor;
 
         public static final String jewelDownS = "jewelDown";
@@ -923,19 +925,19 @@ public class Central extends LinearOpMode{
                 if (Math.abs(ytilt) < xtilt)//left
                 {
                     telemetry.addData("left", true);
-                    driveTrainMovement(speed, movements.right);
+                    driveTrainMovement(0.2, movements.right);
                 } else if (ytilt >= Math.abs(xtilt))//backwards
                 {
                     telemetry.addData("backwards", true);
-                    driveTrainMovement(speed, movements.forward);
+                    driveTrainMovement(0.2, movements.forward);
 
                 } else if (-Math.abs(ytilt) > xtilt)//right
                 {
-                    driveTrainMovement(speed, movements.left);
+                    driveTrainMovement(0.2, movements.left);
                     telemetry.addData("right", true);
                 } else if (ytilt <= -Math.abs(xtilt))//forwards
                 {
-                    driveTrainMovement(speed, movements.backward);
+                    driveTrainMovement(0.2, movements.backward);
                     telemetry.addData("forward", true);
                 }
                 else {
@@ -1277,8 +1279,8 @@ public class Central extends LinearOpMode{
     }
     
     public void setupAutoGlyph() throws InterruptedException{
-        RGrabber = servo(RGrabber, hardwareMap, RGrabberS, Servo.Direction.FORWARD, MIN_POSITION_RGRAB, MAX_POSITION_RGRAB, R_READY_POSITION);
-        LGrabber = servo(LGrabber, hardwareMap, LGrabberS, Servo.Direction.FORWARD, MIN_POSITION_LGRAB, MAX_POSITION_LGRAB, L_READY_POSITION);
+        RGrabber = servo(RGrabber, hardwareMap, RGrabberS, Servo.Direction.FORWARD, MIN_POSITION_RGRAB, MAX_POSITION_RGRAB, START_POSITION_RGRAB);
+        LGrabber = servo(LGrabber, hardwareMap, LGrabberS, Servo.Direction.FORWARD, MIN_POSITION_LGRAB, MAX_POSITION_LGRAB, START_POSITION_LGRAB);
 
     }
 

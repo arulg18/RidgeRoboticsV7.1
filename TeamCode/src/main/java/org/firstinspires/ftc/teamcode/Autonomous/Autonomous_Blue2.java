@@ -88,6 +88,8 @@ public class Autonomous_Blue2 extends Central {
                     break;
 
             }
+
+
             driveTrainEncoderMovement(0.7, 4, 10, 100, movements.forward);
 
             GlyphDownONALL();

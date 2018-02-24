@@ -93,7 +93,7 @@ public class Autonomous_Blue1 extends Central {
 
             }
 
-            driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.cw);
+            driveTrainEncoderMovement(0.7, DEGREE_90, 10, 100, movements.ccw);
             driveTrainEncoderMovement(0.7, 2, 10, 100, movements.forward);
             driveTrainEncoderMovement(0.6, 3, 10, 100, movements.forward);
 

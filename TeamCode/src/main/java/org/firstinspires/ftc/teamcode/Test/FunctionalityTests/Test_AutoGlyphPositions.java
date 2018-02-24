@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Test.FunctionalityTests;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Central;
@@ -9,9 +8,9 @@ import org.firstinspires.ftc.teamcode.Central;
 /**
  * Created by arulgupta on 12/14/17.
  */
-@Autonomous(name = "Jewel Position Test", group = "Test")
+@Autonomous(name = "Auto Glyph Position Test", group = "Test")
 
-public class Test_JewelPositions extends Central {
+public class Test_AutoGlyphPositions extends Central {
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -23,9 +22,9 @@ public class Test_JewelPositions extends Central {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            sweepServo(LGrabber, 0, 0.01, 10);
-            sweepServo(RGrabber, 1, 0.01, 10);
-
+            RGrabber.setPosition(RGRAB_POSITION);
+            LGrabber.setPosition(LGRAB_POSITION);
+            sleep(3000);
             break;
 
         }

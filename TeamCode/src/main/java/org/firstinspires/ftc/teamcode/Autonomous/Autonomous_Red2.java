@@ -30,7 +30,7 @@ public class Autonomous_Red2 extends Central {
 
         CentralClass(setupType.all);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewadadaId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = "AVEnEtj/////AAAAGRuqDKUaCUOqnWNCia71FEYNQd/MLe2TCFrCq7fn6emLKOR3Q0aAXrfxI1ZyrgruipioI2KnVScenAwJ7oxut6uedThCIU8pIJfTmcl7q1P/6vYlqPm/avdhwH8Qq3CuSHkx/7aqN0SKFHKhV6c1UkShZaynBNfXd9K2MpcHJCnqzBKT2La6urdGGiXj7P/bwK3K/zBmVJY3z+lnsNBz31OS5L8ihr383ZOfC2EGVglkft4ulEEPv+CsR2Oa/5EFMXYr6tNsD2aXmygWXleSUGutBjtgZT0Ebw9/IkF99TFgo0jmM0sDpav+X5/11t+Bf6ufSP9MmGssfSDr6wi2QRctDiF50aJOL/ov6boj7d8/";
@@ -72,21 +72,21 @@ public class Autonomous_Red2 extends Central {
             driveTrainEncoderMovement(0.7, 30, 10, 100, movements.backward);
             switch(position){
                 case 0:         //Left
-                    driveTrainEncoderMovement(0.7, 16, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.7, 16, 10, 100, movements.right);
 
                     break;
                 case 1:         //Center
-                    driveTrainEncoderMovement(0.7, 12, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.7, 12, 10, 100, movements.right);
 
 
                     break;
                 case 2:         //Right
-                    driveTrainEncoderMovement(0.7, 8, 10, 100, movements.left);
+                    driveTrainEncoderMovement(0.7, 8, 10, 100, movements.right);
 
                     break;
 
             }
-            driveTrainEncoderMovement(0.7, 2*DEGREE_90, 10, 100, movements.ccw);
+            driveTrainEncoderMovement(0.7, 2*DEGREE_90, 10, 100, movements.cw);
             driveTrainEncoderMovement(0.7, 6, 10, 100, movements.forward);
 
             GlyphDownONALL();

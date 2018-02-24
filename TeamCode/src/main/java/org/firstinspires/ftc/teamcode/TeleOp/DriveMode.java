@@ -206,7 +206,7 @@ public class DriveMode extends Central {
 
 
             if (gamepad2.y){
-                rightTread.setPower(0.9);
+                rightTread.setPower(1);
                 leftTread.setPower(1);
                 sleep(30);
             }
