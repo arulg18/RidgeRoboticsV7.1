@@ -52,7 +52,6 @@ public class Autonomous_Red1 extends Central {
         runtime.reset();
 
         relicTrackables.activate();
-
         while (opModeIsActive()) {
             flick(side);
             sweepServo(pullServo, LOW_POSITION_PULL, 0.04, 30);

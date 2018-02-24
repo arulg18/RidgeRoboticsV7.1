@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Test.FunctionalityTests;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Central;
@@ -23,7 +22,7 @@ public class RotationTest extends Central {
 
         super.setRuntime(runtime);
         waitForStart();
-        setupIMU(team.red1);
+        setupSensors(team.red1);
         setupDrivetrain();
         turn(90, turnside.cw, 1);
         telemetry.addLine("90 degrees, Speed 1, clockwise, center axis");
