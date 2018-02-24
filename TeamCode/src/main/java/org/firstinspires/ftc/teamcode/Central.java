@@ -103,14 +103,14 @@ public class Central extends LinearOpMode{
     public static final double MAX_POSITION_FLICK = 1;
 
                 //  Initial Positions
-                public static final double START_POSITION_DOWN = 0.65;
-                public static final double START_POSITION_FLICK = 0.32;
+                public static final double START_POSITION_DOWN = 0.87;
+                public static final double START_POSITION_FLICK = 0.25;
 
                 //  Significant Positions
 
                     //  Centered Positions
                     public static final double CENTER_POSITION_DOWN = 0.65;
-                    public static final double CENTER_POSITION_FLICK = 0.42;
+                    public static final double CENTER_POSITION_FLICK = 0.3;
 
                     //  Flick Positions
                     public static final double LOW_POSITION_DOWN = 0;
@@ -146,8 +146,8 @@ public class Central extends LinearOpMode{
                 public static final double MIN_POSITION_LGRAB = 0.4;
 
                 //  Maximum Positions
-                public static final double MAX_POSITION_RGRAB = 0.54;
-                public static final double MAX_POSITION_LGRAB = 0.94;
+                public static final double MAX_POSITION_RGRAB = 0.4;
+                public static final double MAX_POSITION_LGRAB = 0.54;
 
                 //  Initial Positions
                 public static final double START_POSITION_RGRAB = 1;
