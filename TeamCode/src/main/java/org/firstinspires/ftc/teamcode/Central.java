@@ -1171,7 +1171,7 @@ public class Central extends LinearOpMode {
                 }
 
         }
-    */
+    */// dont open this lol
                     public void GlyphPlaceRed(int position, angledir axis) throws InterruptedException {
 
                         if (axis == angledir.left) {

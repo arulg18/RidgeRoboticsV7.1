@@ -217,6 +217,7 @@ public class DriveMode extends Central {
                 rightTread.setPower(0);
                 leftTread.setPower(0);
             }
+            pseudotester();
 
             telemetry.addData("IMU Angular Orientation: ", imu.getAngularOrientation());
 
@@ -260,6 +261,9 @@ public class DriveMode extends Central {
             */
         }
 //        initialPositionFlicker(0);
+
+    }
+    protected void pseudotester() throws  InterruptedException { //unused method used for inheriting
 
     }
 
