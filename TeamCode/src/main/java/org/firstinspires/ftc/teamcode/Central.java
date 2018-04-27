@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -18,6 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import org.firstinspires.ftc.teamcode.Functionality.RangePrediction;
 
 import java.util.Arrays;
 
@@ -262,7 +265,7 @@ public class Central extends LinearOpMode{
 
 //------------------------CONFIGURATIONS----------------------
     // Sensor
-    public BNO055IMUImpl imu;
+    public static BNO055IMUImpl imu;
     public BNO055IMUImpl.Parameters parameters = new BNO055IMUImpl.Parameters();
     public Orientation current;
     float initorient;
@@ -327,7 +330,11 @@ public class Central extends LinearOpMode{
         public static final String RGrabberS = "rightGrabber";
         public static final String LGrabberS = "leftGrabber";
         
-
+    //RangeFinders
+    public  static ModernRoboticsI2cRangeSensor yleft;
+    public  static ModernRoboticsI2cRangeSensor yright;
+    public  static ModernRoboticsI2cRangeSensor xfront;
+    public  static ModernRoboticsI2cRangeSensor xback;
 
 
     //------------------ARRAYS------------
@@ -1277,6 +1284,12 @@ public class Central extends LinearOpMode{
         leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
         rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
     }
+    public void setupRange() throws InterruptedException{
+        xfront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "xfront Range");
+        xback  = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "xback Range");
+        yleft= hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "yleft Range");
+        yright = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "yright Range");
+    }
     
     public void setupAutoGlyph() throws InterruptedException{
         RGrabber = servo(RGrabber, hardwareMap, RGrabberS, Servo.Direction.FORWARD, MIN_POSITION_RGRAB, MAX_POSITION_RGRAB, START_POSITION_RGRAB);
@@ -1317,7 +1330,7 @@ public class Central extends LinearOpMode{
         //origin is @ bottom left when looking at the board with red1 @ top left corner
         // 0 degrees is @ east when looking at the board with red1 @ top left corner
         Velocity veloInit = new Velocity(DistanceUnit.INCH, 0, 0, 0, 0);
-        imu.startAccelerationIntegration(new Position(),new Velocity(),20);
+        imu.startAccelerationIntegration(startpos,new Velocity(),20);
         initorient = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
